@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { getVirtualMachines, VirtualMachine } from '../components/VirtualMachine';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  Link,
+} from '@mui/material';
 
 export function VirtualMachinesList() {
   const [virtualMachines, setVirtualMachines] = useState<VirtualMachine[]>([]);
@@ -12,7 +22,7 @@ export function VirtualMachinesList() {
       setVirtualMachines(
         data.map((vm) => ({
           ...vm,
-          clickCount: 0, // add a click count state variable to each virtual machine
+          clickCount: 0,
         })),
       );
     }
@@ -26,33 +36,29 @@ export function VirtualMachinesList() {
     setVirtualMachines(updatedVirtualMachines);
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  /*if (loading) {
+    return <div></div>;
+  }*/
 
   return (
-    <div>
-      <h2
-        className={`inline-flex flex-col text-left px-4 py-3
-    rounded-md border-1 border-transparent`}
-      >
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h4" sx={{ mb: 2 }}>
         Virtual Machines
-      </h2>
-      <ul>
+      </Typography>
+      <List sx={{ mb: 2 }}>
         {virtualMachines.map((vm) => (
-          <li key={vm.ID}>
-            {vm.VsphereID}, {vm.Name}, click count: {vm.clickCount}
-            <button
-              className={`inline-flex flex-col text-left px-4 py-3
-    rounded-md border-1 border-transparent`}
-              onClick={() => handleClick(vm)}
-            >
+          <ListItem key={vm.ID} sx={{ py: 1 }}>
+            <ListItemText primary={vm.Name} secondary={`ID: ${vm.VsphereID}`} />
+            <Button variant="contained" sx={{ mr: 1 }}>
               Edit
-            </button>
-            <button>Details</button>
-          </li>
+            </Button>
+            <Button variant="contained" href={`/virtual-machines/${vm.Name}`}>
+              Details
+            </Button>
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+      <Button>Create a new virtual machine</Button>
+    </Box>
   );
 }

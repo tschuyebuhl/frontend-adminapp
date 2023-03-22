@@ -1,16 +1,40 @@
-import './App.css';
-import { VirtualMachinesList } from './pages/VirtualMachinesList';
-import { TicketList } from './pages/TicketList';
-import { TicketForm } from './components/Form';
+import { createRoot } from 'react-dom/client';
+import * as React from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from '@mui/system';
+import theme from './theme';
+import { Routes } from './routes/Routes';
+import ResponsiveAppBar from './components/ResponsiveAppbar';
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    },
+  },
+});
 function App() {
   return (
-    <div className="App">
-      <TicketList />
-      <VirtualMachinesList />
-      <TicketForm />
-    </div>
+    <React.Fragment>
+      <ResponsiveAppBar />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <Routes />
+        </QueryClientProvider>
+      </ThemeProvider>
+    </React.Fragment>
   );
 }
+const container = document.getElementById('root');
 
-export default App;
+if (!container) {
+  throw new Error('no container to render to');
+}
+
+const root = createRoot(container);
+root.render(<App />);

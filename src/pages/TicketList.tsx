@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Ticket, getTickets } from '../components/Ticket';
+import Button from '@mui/material/Button';
+import { Box, CircularProgress, List, ListItem, ListItemText, Typography } from '@mui/material';
 
 export function TicketList() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -31,28 +33,27 @@ export function TicketList() {
   }
 
   return (
-    <div>
-      <h2
-        className={`inline-flex flex-col text-left px-4 py-3
-    rounded-md border-1 border-transparent`}
-      >
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h4" gutterBottom>
         Tickets
-      </h2>
-      <ul>
+      </Typography>
+      <List>
         {tickets.map((t) => (
-          <li key={t.ID}>
-            {t.ID}, click count: {t.clickCount}, {t.Priority}
-            <button
-              className={`inline-flex flex-col text-left px-4 py-3
-    rounded-md border-1 border-transparent`}
-              onClick={() => handleClick(t)}
-            >
-              Edit
-            </button>
-            <button>Details</button>
-          </li>
+          <ListItem
+            key={t.ID}
+            disablePadding
+            sx={{ display: 'flex', justifyContent: 'space-between' }}
+          >
+            <ListItemText primary={t.Title} secondary={`Clicked ${t.clickCount} times`} />
+            <Box>
+              <Button variant="contained" color="primary" onClick={() => handleClick(t)}>
+                Edit
+              </Button>
+              <Button variant="contained">Details</Button>
+            </Box>
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Box>
   );
 }

@@ -1,53 +1,43 @@
-import React from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import Select from 'react-select';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { Input } from '@mui/material';
 
-interface data {
-  category: string;
-  issueSummary: string;
-  email: string;
-  mobileNumber: string;
-  assignee: string;
-  issueDetails: string;
+interface IFormInput {
+  firstName: string;
+  lastName: string;
+  iceCreamType: { label: string; value: string };
 }
 
 export function TicketForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const onSubmit: SubmitHandler<data> = (data) => console.log(data);
-  console.log(errors);
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      iceCreamType: {},
+    },
+  });
+
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    console.log(data);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <select {...register('category')}>
-        <option value="Question">Question</option>
-        <option value="Incident">Incident</option>
-        <option value="Service Request">Service Request</option>
-        <option value="Feature Request">Feature Request</option>
-      </select>
-      <input
-        type="text"
-        placeholder="Issue Summary"
-        {...register('Issue Summary', { required: true, maxLength: 100 })}
+      <Controller name="firstName" control={control} render={({ field }) => <Input {...field} />} />
+      <Controller
+        name="iceCreamType"
+        control={control}
+        render={({ field }) => (
+          <Select
+            {...field}
+            options={[
+              { value: 'chocolate', label: 'Chocolate' },
+              { value: 'strawberry', label: 'Strawberry' },
+              { value: 'vanilla', label: 'Vanilla' },
+            ]}
+          />
+        )}
       />
-      <input
-        type="text"
-        placeholder="Email"
-        {...register('Email', { required: true, pattern: /^\S+@\S+$/i })}
-      />
-      <input
-        type="tel"
-        placeholder="Mobile number"
-        {...register('Mobile number', { required: true, minLength: 6, maxLength: 12 })}
-      />
-      <select {...register('Assignee')}>
-        <option value="Test">Test</option>
-        <option value="Test2">Test2</option>
-      </select>
-      <textarea {...register('Issue Details', {})} />
-
       <input type="submit" />
     </form>
   );
