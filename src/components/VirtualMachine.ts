@@ -1,4 +1,6 @@
 import { QueryKey } from '@tanstack/react-query';
+import axios from 'axios';
+
 export interface VirtualMachine {
   ID: string;
   VsphereID: string;
@@ -13,15 +15,19 @@ export interface VirtualMachine {
 }
 
 export async function getVirtualMachines(): Promise<VirtualMachine[]> {
-  const response = await fetch('http://localhost:8080/api/v1/virtual-machines/');
-  const data = await response.json();
-  return data;
+  const response = await axios.get('/api/v1/virtual-machines/');
+  return response.data;
 }
-export async function getVirtualMachine({ queryKey } : { queryKey: QueryKey }): Promise<VirtualMachine> {
+
+export async function getVirtualMachine({
+  queryKey,
+}: {
+  queryKey: QueryKey;
+}): Promise<VirtualMachine> {
   const name = queryKey[1];
-  const response = await fetch('http://localhost:8080/api/v1/virtual-machines/' + name);
-  if (!response.ok) {
+  const response = await axios.get(`/api/v1/virtual-machines/${name}`);
+  if (response.status !== 200) {
     throw new Error(`${name} fetch not ok`);
   }
-  return response.json();
+  return response.data;
 }

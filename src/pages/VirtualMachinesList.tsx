@@ -53,9 +53,9 @@ export function VirtualMachinesList() {
     fetchVirtualMachines();
   }, []);
 
-  const handleClick = () => {
-    navigate('/virtual-machines/' + 'test');
-  };
+  function handleClick(name: string) {
+    navigate('/virtual-machines/' + name);
+  }
 
   if (loading) {
     return <></>;
@@ -82,13 +82,17 @@ export function VirtualMachinesList() {
         }}
         displayColumnDefOptions={{
           'mrt-row-actions': {
-            header: 'Change Account Settings', //change header text
+            header: 'VM Details', //change header text
             size: 15,
           },
         }}
         positionActionsColumn="last"
         enableRowActions={true}
-        renderRowActions={({ row }) => [<MenuItem onClick={handleClick}>Edit</MenuItem>]}
+        renderRowActions={({ row }) => [
+          <Button variant="contained" href={'/virtual-machines/' + row.original.Name}>
+            Details
+          </Button>,
+        ]}
       />
     </Box>
   );

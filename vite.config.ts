@@ -6,4 +6,14 @@ import vitePluginRewriteAll from 'vite-plugin-rewrite-all';
 export default defineConfig({
   plugins: [react(), vitePluginRewriteAll()],
   root: 'src',
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+        //rewrite: (path) => path.replace('/api', ''),
+      },
+    },
+  },
 });

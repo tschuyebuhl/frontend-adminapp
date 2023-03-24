@@ -6,6 +6,8 @@ import { ThemeProvider } from '@mui/system';
 import theme from './theme';
 import { Routes } from './routes/Routes';
 import ResponsiveAppBar from './components/ResponsiveAppbar';
+import keycloak from './util/keycloak';
+import { ReactKeycloakProvider } from '@react-keycloak/web';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,13 +20,15 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <React.Fragment>
-      <ResponsiveAppBar />
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <QueryClientProvider client={queryClient}>
-          <Routes />
-        </QueryClientProvider>
-      </ThemeProvider>
+      <ReactKeycloakProvider authClient={keycloak} initOptions={{ onLoad: 'login-required' }}>
+        <ResponsiveAppBar />
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <QueryClientProvider client={queryClient}>
+            <Routes />
+          </QueryClientProvider>
+        </ThemeProvider>
+      </ReactKeycloakProvider>
     </React.Fragment>
   );
 }
