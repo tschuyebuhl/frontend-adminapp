@@ -21,9 +21,9 @@ export function VirtualMachineDetails() {
 
   const virtualMachine = results.data;
 
-  /*if (results.isLoading) {
-    return <div>🌀</div>;
-  }*/
+  if (results.isLoading) {
+    return <></>;
+  }
 
   function handleClick() {
     navigate('/virtual-machines');

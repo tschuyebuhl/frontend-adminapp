@@ -1,7 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@mui/system';
 import theme from './theme';
@@ -23,7 +22,6 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
           <Routes />
         </QueryClientProvider>
       </ThemeProvider>
