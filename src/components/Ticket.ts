@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export type Ticket = {
   ID: string;
   Title: string;
@@ -15,7 +17,6 @@ export enum Priority {
   real_time,
 }
 export async function getTickets(): Promise<Ticket[]> {
-  const response = await fetch('http://localhost:8080/api/v1/tickets/');
-  const data = await response.json();
-  return data;
+    const response = await axios.get('/api/v1/tickets/');
+    return response.data;
 }

@@ -29,6 +29,7 @@ export function VirtualMachineDetails() {
     navigate('/virtual-machines');
   }
 
+  // @ts-ignore
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h4" sx={{ mb: 2 }}>
@@ -37,7 +38,7 @@ export function VirtualMachineDetails() {
       <Button onClick={handleClick}>Go back</Button> <br />
       <Typography variant="h6" sx={{ mb: 2 }}>
         Name: {virtualMachine?.Name} <br />
-        RAM: {virtualMachine?.MemoryMB} <br />
+        RAM: {virtualMachine?.MemoryMB / 1024} GB <br />
         vCPU: {virtualMachine?.NumCpus} <br />
       </Typography>
       <Button>Edit VM</Button> <br />
