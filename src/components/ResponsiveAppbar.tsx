@@ -99,7 +99,7 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <Button key={page} onClick={handleCloseNavMenu}>
+                <Button key={page} variant="text" onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{page}</Typography>
                 </Button>
               ))}

@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { getVirtualMachines, VirtualMachine } from './VirtualMachine';
 import MaterialReactTable from 'material-react-table';
-import type { MRT_ColumnDef } from 'material-react-table';
 import { useNavigate } from 'react-router-dom';
 import { useKeycloak } from '@react-keycloak/web';
-
+import CreateNewVirtualMachineModal from "./CreateNewVirtualMachineModal";
 import {
   Box,
   Button,
@@ -19,57 +18,58 @@ import {
 
 let strictMode = false;
 
+const vmColumns: MRT_ColumnDef<VirtualMachine>[] = [
+  {
+    header: 'Name',
+    accessorKey: 'name',
+  },
+  {
+    header: 'IP',
+    accessorKey: 'ip',
+  },
+  {
+    header: 'Host',
+    accessorKey: 'host',
+  },
+  {
+    header: 'Folder',
+    accessorKey: 'folder',
+  },
+  ];
+
 export function VirtualMachinesList() {
   const { keycloak } = useKeycloak();
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const columns = useMemo<MRT_ColumnDef<VirtualMachine>[]>(
-    () => [
-      {
-        //accessorFn: (originalRow) => originalRow.HostID, //alternate way
-        accessorKey: 'Name',
-        header: 'Name',
-        muiTableHeadCellProps: { sx: { color: 'green' } }, //custom props
-      },
-      {
-        //accessorFn: (originalRow) => originalRow.CustomerID, //alternate way
-        //id: 'CustomerID', //id required if you use accessorFn instead of accessorKey
-        accessorKey: 'GuestOs',
-        header: 'Guest OS',
-      },
-      {
-        //accessorFn: (originalRow) => originalRow.CustomerID, //alternate way
-        //id: 'CustomerID', //id required if you use accessorFn instead of accessorKey
-        accessorKey: 'PowerState',
-        header: 'Power State',
-      },
-      {
-        //accessorFn: (originalRow) => originalRow.CustomerID, //alternate way
-        //id: 'CustomerID', //id required if you use accessorFn instead of accessorKey
-        accessorKey: 'NumCpus',
-        header: 'vCPU',
-      },
-      {
-        //accessorFn: (originalRow) => originalRow.CustomerID, //alternate way
-        //id: 'CustomerID', //id required if you use accessorFn instead of accessorKey
-        accessorKey: 'MemoryMB',
-        header: 'RAM',
-      },
-      {
-        //accessorFn: (originalRow) => originalRow.CustomerID, //alternate way
-        //id: 'CustomerID', //id required if you use accessorFn instead of accessorKey
-        accessorKey: 'HostName',
-        header: 'Host',
-      },
-      {
-        //accessorFn: (originalRow) => originalRow.CustomerID, //alternate way
-        //id: 'CustomerID', //id required if you use accessorFn instead of accessorKey
-        accessorKey: 'CustomerName',
-        header: 'Customer',
-      },
-      
-    ],
-    [],
-  );
+  const columns = useMemo(() => [
+    {
+      accessorKey: 'Name',
+      header: 'Name',
+    },
+    {
+      accessorKey: 'GuestOs',
+      header: 'Guest OS',
+    },
+    {
+      accessorKey: 'PowerState',
+      header: 'Power State',
+    },
+    {
+      accessorKey: 'NumCpus',
+      header: 'vCPU',
+    },
+    {
+      accessorKey: 'MemoryMB',
+      header: 'RAM',
+    },
+    {
+      accessorKey: 'HostName',
+      header: 'Host',
+    },
+    {
+      accessorKey: 'CustomerName',
+      header: 'Customer',
+    },
+  ], []);
   const [virtualMachines, setVirtualMachines] = useState<VirtualMachine[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -78,20 +78,29 @@ export function VirtualMachinesList() {
     async function fetchVirtualMachines() {
       const data = await getVirtualMachines();
       setLoading(false);
-      setVirtualMachines(
-        data.map((vm) => ({
-          ...vm,
-        })),
-      );
+      setVirtualMachines(data.map(vm => ({ ...vm })));
     }
-    if(keycloak.authenticated || !strictMode) {
+
+    if (keycloak.authenticated || !strictMode) {
       fetchVirtualMachines();
     }
-    }, [keycloak.authenticated]);
+  }, [keycloak.authenticated]);
 
   function handleClick(name: string) {
     navigate('/virtual-machines/' + name);
   }
+
+  const handleCreateNewRow = (values: VirtualMachine) => {
+    // logic to add new virtual machine to the list
+  };
+
+  const handleCreateModalClose = () => {
+    setCreateModalOpen(false);
+  };
+
+  const handleCreateModalOpen = () => {
+    setCreateModalOpen(true);
+  };
 
   if (loading) {
     return <></>;
@@ -99,109 +108,51 @@ export function VirtualMachinesList() {
 
   return (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h4" sx={{ mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Typography
+        variant="h4"
+        sx={{ mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+      >
         Virtual Machines
       </Typography>
       <MaterialReactTable
         columns={columns}
+        data={virtualMachines}
         enableColumnResizing={false}
+        enableRowActions={true}
+        positionActionsColumn="last"
+        displayColumnDefOptions={{
+          'mrt-row-actions': {
+            header: 'VM Details',
+            size: 15,
+          },
+        }}
+        renderRowActions={({ row }) => [
+          <Button variant="outlined" href={'/virtual-machines/' + row.original.Name}>
+            Details
+          </Button>,
+        ]}
+        renderTopToolbarCustomActions={() => (
+          <Button color="secondary" onClick={handleCreateModalOpen} variant="contained">
+            Create New Virtual Machine
+          </Button>
+        )}
         muiTablePaginationProps={{
           rowsPerPageOptions: [5, 10, 25],
           showFirstButton: true,
           showLastButton: true,
         }}
-        data={virtualMachines}
         muiTableProps={{
           sx: {
             tableLayout: 'fixed',
           },
         }}
-        displayColumnDefOptions={{
-          'mrt-row-actions': {
-            header: 'VM Details', //change header text
-            size: 15,
-          },
-        }}
-        positionActionsColumn="last"
-        enableRowActions={true}
-        renderRowActions={({ row }) => [
-          <Button variant="contained" href={'/virtual-machines/' + row.original.Name}>
-            Details
-          </Button>,
-        ]}
-        renderTopToolbarCustomActions={() => (
-          <Button
-            color="secondary"
-            onClick={() => setCreateModalOpen(true)}
-            variant="contained"
-            >
-            Create New Virtual Machine
-          </Button>
-          )}
       />
-      <CreateNewAccountModal
-        columns={columns}
+      <CreateNewVirtualMachineModal
         open={createModalOpen}
-        onClose={() => setCreateModalOpen(false)}
+        onClose={handleCreateModalClose}
         onSubmit={handleCreateNewRow}
+        columns={vmColumns}
       />
     </Box>
   );
 }
-export const CreateNewAccountModal = ({
-  open,
-  columns,
-  onClose,
-  onSubmit,
-}: CreateModalProps) => {
-  const [values, setValues] = useState<any>(() =>
-    columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
-      return acc;
-      }, {} as any),
-      );
-
-  const handleSubmit = () => {
-    //put your validation logic here
-    onSubmit(values);
-    onClose();
-  };
-
-  return (
-    <Dialog open={open}>
-      <DialogTitle textAlign="center">Create New Account</DialogTitle>
-      <DialogContent>
-        <form onSubmit={(e) => e.preventDefault()}>
-          <Stack
-            sx={{
-            width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
-            }}
-            >
-            {columns.map((column) => (
-              <TextField
-                key={column.accessorKey}
-                label={column.header}
-                name={column.accessorKey}
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.name]: e.target.value })
-                }
-              />
-              ))}
-          </Stack>
-        </form>
-      </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button color="secondary" onClick={handleSubmit} variant="contained">
-          Create New Account
-        </Button>
-      </DialogActions>
-    </Dialog>
-    );
-};
-const handleCreateNewRow = (values: VirtualMachine) => {
-  data.push(values);
-  setTableData([...data]);
-};

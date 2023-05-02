@@ -21,8 +21,8 @@ function App() {
   return (
     <React.Fragment>
       <ReactKeycloakProvider authClient={keycloak} initOptions={{ onLoad: 'login-required' }}>
-        <ResponsiveAppBar />
         <ThemeProvider theme={theme}>
+        <ResponsiveAppBar />
           <CssBaseline />
           <QueryClientProvider client={queryClient}>
             <Routes />
