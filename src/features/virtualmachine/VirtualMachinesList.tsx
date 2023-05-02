@@ -3,6 +3,7 @@ import { getVirtualMachines, VirtualMachine } from './VirtualMachine';
 import MaterialReactTable from 'material-react-table';
 import type { MRT_ColumnDef } from 'material-react-table';
 import { useNavigate } from 'react-router-dom';
+import { useKeycloak } from '@react-keycloak/web';
 
 import {
   Box,
@@ -11,6 +12,7 @@ import {
 } from '@mui/material';
 
 export function VirtualMachinesList() {
+  const { keycloak } = useKeycloak();
   const columns = useMemo<MRT_ColumnDef<VirtualMachine>[]>(
     () => [
       {
@@ -39,12 +41,13 @@ export function VirtualMachinesList() {
       setVirtualMachines(
         data.map((vm) => ({
           ...vm,
-          clickCount: 0,
         })),
       );
     }
-    fetchVirtualMachines();
-  }, []);
+    if(keycloak.authenticated) {
+      fetchVirtualMachines();
+    }
+    }, [keycloak.authenticated]);
 
   function handleClick(name: string) {
     navigate('/virtual-machines/' + name);
