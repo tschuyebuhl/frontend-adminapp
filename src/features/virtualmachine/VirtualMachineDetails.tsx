@@ -1,16 +1,11 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { getVirtualMachine, VirtualMachine } from '../components/VirtualMachine';
+import { getVirtualMachine } from './VirtualMachine';
 import { useQuery } from '@tanstack/react-query';
 
 import {
   Box,
   Button,
-  CircularProgress,
-  List,
-  ListItem,
-  ListItemText,
   Typography,
-  Link,
 } from '@mui/material';
 
 export function VirtualMachineDetails() {
@@ -38,7 +33,7 @@ export function VirtualMachineDetails() {
       <Button onClick={handleClick}>Go back</Button> <br />
       <Typography variant="h6" sx={{ mb: 2 }}>
         Name: {virtualMachine?.Name} <br />
-        RAM: {virtualMachine?.MemoryMB / 1024} GB <br />
+        RAM: {virtualMachine?.MemoryMB ? virtualMachine.MemoryMB / 1024 : null} GB <br />
         vCPU: {virtualMachine?.NumCpus} <br />
       </Typography>
       <Button>Edit VM</Button> <br />

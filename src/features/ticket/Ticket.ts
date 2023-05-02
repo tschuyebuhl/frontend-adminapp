@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from '../../util/api';
 
 export type Ticket = {
   ID: string;
@@ -17,6 +17,6 @@ export enum Priority {
   real_time,
 }
 export async function getTickets(): Promise<Ticket[]> {
-    const response = await axios.get('/api/v1/tickets/');
+    const response = await api.get('/api/v1/tickets/');
     return response.data;
 }

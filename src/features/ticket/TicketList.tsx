@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Ticket, getTickets } from '../components/Ticket';
+import { Ticket, getTickets } from './Ticket';
 import Button from '@mui/material/Button';
 import { Box, CircularProgress, List, ListItem, ListItemText, Typography } from '@mui/material';
 

@@ -1,20 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { getVirtualMachines, VirtualMachine } from '../components/VirtualMachine';
-import PagedTable from '../components/TablePagination';
+import { getVirtualMachines, VirtualMachine } from './VirtualMachine';
 import MaterialReactTable from 'material-react-table';
 import type { MRT_ColumnDef } from 'material-react-table';
-import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 
 import {
   Box,
   Button,
-  CircularProgress,
-  List,
-  ListItem,
-  ListItemText,
   Typography,
-  Link,
 } from '@mui/material';
 
 export function VirtualMachinesList() {

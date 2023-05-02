@@ -1,8 +1,10 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { VirtualMachinesList } from '../pages/VirtualMachinesList';
-import { VirtualMachineDetails } from '../pages/VirtualMachineDetails';
-import { TicketList } from '../pages/TicketList';
+import { VirtualMachinesList } from '../features/virtualmachine/VirtualMachinesList';
+import { VirtualMachineDetails } from '../features/virtualmachine/VirtualMachineDetails';
+import { TicketList } from '../features/ticket/TicketList';
 import ErrorPage from '../pages/ErrorPage';
+import {CreateProject} from "../features/project/CreateProject";
+import ProjectList from "../features/project/ProjectList";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +24,10 @@ const router = createBrowserRouter([
     path: 'tickets',
     element: <TicketList />,
   },
+  {
+    path: 'projects',
+    element: <ProjectList />
+  }
 ]);
 
 export function Routes() {
