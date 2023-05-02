@@ -11,20 +11,14 @@ import {
 export function VirtualMachineDetails() {
   const { name } = useParams<string>();
   let navigate = useNavigate();
-
   const results = useQuery(['name', name], getVirtualMachine);
-
   const virtualMachine = results.data;
-
   if (results.isLoading) {
     return <></>;
   }
-
   function handleClick() {
     navigate('/virtual-machines');
   }
-
-  // @ts-ignore
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h4" sx={{ mb: 2 }}>

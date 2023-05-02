@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { VirtualMachinesList } from '../features/virtualmachine/VirtualMachinesList';
-import { VirtualMachineDetails } from '../features/virtualmachine/VirtualMachineDetails';
+import { VirtualMachinesList } from '../features/vm/VirtualMachinesList';
+import { VirtualMachineDetails } from '../features/vm/VirtualMachineDetails';
 import { TicketList } from '../features/ticket/TicketList';
 import ErrorPage from '../pages/ErrorPage';
 import {CreateProject} from "../features/project/CreateProject";

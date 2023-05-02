@@ -9,9 +9,8 @@ export interface VirtualMachine {
   NumCpus: number;
   MemoryMB: number;
   GuestOs: string;
-  HostID: string;
-  CustomerID: string;
-  clickCount: number;
+  HostName: string;
+  CustomerName: string;
 }
 
 export async function getVirtualMachines(): Promise<VirtualMachine[]> {
