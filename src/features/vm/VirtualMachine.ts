@@ -12,6 +12,12 @@ export interface VirtualMachine {
   HostName: string;
   CustomerName: string;
 }
+export interface CreateVirtualMachineRequest {
+  name: string;
+  ip: string;
+  host: string;
+  folder: string;
+}
 
 export async function getVirtualMachines(): Promise<VirtualMachine[]> {
   const response = await api.get('/api/v1/virtual-machines/');
@@ -30,3 +36,19 @@ export async function getVirtualMachine({
   }
   return response.data;
 }
+export const createVirtualMachine = async (newVmData: CreateVirtualMachineRequest): Promise<VirtualMachine> => {
+  const response = await fetch('/api/v1/virtual-machines', { // Replace with your API endpoint
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newVmData),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to create a new virtual machine: ${response.statusText}`);
+  }
+
+  const createdVm = await response.json();
+  return createdVm;
+};

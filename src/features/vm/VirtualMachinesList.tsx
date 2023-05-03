@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { getVirtualMachines, VirtualMachine } from './VirtualMachine';
+import { getVirtualMachines, VirtualMachine, createVirtualMachine, CreateVirtualMachineRequest } from './VirtualMachine';
 import MaterialReactTable from 'material-react-table';
 import { useNavigate } from 'react-router-dom';
 import { useKeycloak } from '@react-keycloak/web';
 import CreateNewVirtualMachineModal from "./CreateNewVirtualMachineModal";
+import { MRT_ColumnDef } from 'material-react-table';
+import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+
 import {
   Box,
   Button,
@@ -13,12 +17,13 @@ import {
   DialogContent,
   DialogTitle,
   Stack,
-  TextField
+  TextField,
+  CircularProgress
 } from '@mui/material';
 
 let strictMode = false;
 
-const vmColumns: MRT_ColumnDef<VirtualMachine>[] = [
+const vmColumns: MRT_ColumnDef<CreateVirtualMachineRequest>[] = [
   {
     header: 'Name',
     accessorKey: 'name',
@@ -45,10 +50,10 @@ export function VirtualMachinesList() {
       accessorKey: 'Name',
       header: 'Name',
     },
-    {
+    /*{
       accessorKey: 'GuestOs',
       header: 'Guest OS',
-    },
+    },*/
     {
       accessorKey: 'PowerState',
       header: 'Power State',
@@ -70,9 +75,13 @@ export function VirtualMachinesList() {
       header: 'Customer',
     },
   ], []);
-  const [virtualMachines, setVirtualMachines] = useState<VirtualMachine[]>([]);
-  const [loading, setLoading] = useState(true);
+  //const [virtualMachines, setVirtualMachines] = useState<VirtualMachine[]>([]);
+  //const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const {
+    data: virtualMachines,
+    isLoading: loading,
+  } = useQuery(['virtualMachines'], getVirtualMachines);
 
   useEffect(() => {
     async function fetchVirtualMachines() {
@@ -90,8 +99,20 @@ export function VirtualMachinesList() {
     navigate('/virtual-machines/' + name);
   }
 
-  const handleCreateNewRow = (values: VirtualMachine) => {
-    // logic to add new virtual machine to the list
+  const handleCreateNewRow = async (values: CreateVirtualMachineRequest) => {
+    try {
+      // Call the function to create a new virtual machine through your API
+      const createdVm = await createVirtualMachine(values);
+
+      // Update the virtualMachines state with the new virtual machine
+      setVirtualMachines((prevVms) => [...prevVms, createdVm]);
+
+      // Close the modal
+      handleCreateModalClose();
+    } catch (error) {
+      console.error("Error creating a new virtual machine:", error);
+      // You can also show a notification or an alert to inform the user about the error
+    }
   };
 
   const handleCreateModalClose = () => {
@@ -103,7 +124,18 @@ export function VirtualMachinesList() {
   };
 
   if (loading) {
-    return <></>;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
@@ -127,8 +159,8 @@ export function VirtualMachinesList() {
           },
         }}
         renderRowActions={({ row }) => [
-          <Button variant="outlined" href={'/virtual-machines/' + row.original.Name}>
-            Details
+          <Button variant="outlined" component={Link} to={`/virtual-machines/${row.original.Name}`}>
+          Details
           </Button>,
         ]}
         renderTopToolbarCustomActions={() => (
@@ -143,7 +175,7 @@ export function VirtualMachinesList() {
         }}
         muiTableProps={{
           sx: {
-            tableLayout: 'fixed',
+          //  tableLayout: 'fixed',
           },
         }}
       />

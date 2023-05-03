@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   Box,
   Button,
+  CircularProgress,
   Typography,
 } from '@mui/material';
 
@@ -14,8 +15,20 @@ export function VirtualMachineDetails() {
   const results = useQuery(['name', name], getVirtualMachine);
   const virtualMachine = results.data;
   if (results.isLoading) {
-    return <></>;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
+  
   function handleClick() {
     navigate('/virtual-machines');
   }
@@ -25,14 +38,20 @@ export function VirtualMachineDetails() {
         Virtual Machine Details:
       </Typography>
       <Button onClick={handleClick}>Go back</Button> <br />
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Name: {virtualMachine?.Name} <br />
-        RAM: {virtualMachine?.MemoryMB ? virtualMachine.MemoryMB / 1024 : null} GB <br />
-        vCPU: {virtualMachine?.NumCpus} <br />
-      </Typography>
-      <Button>Edit VM</Button> <br />
-      <Button>Run Playbook</Button> <br />
-      <Button>Clone VM</Button>
+      <Box sx={{ mb: 2 }}>
+  <Typography variant="h6">Name: {virtualMachine?.Name}</Typography>
+</Box>
+<Box sx={{ mb: 2 }}>
+  <Typography variant="h6">
+    RAM: {virtualMachine?.MemoryMB ? virtualMachine.MemoryMB / 1024 : null} GB
+  </Typography>
+</Box>
+<Box sx={{ mb: 2 }}>
+  <Typography variant="h6">vCPU: {virtualMachine?.NumCpus}</Typography>
+</Box>
+<Button aria-label="Edit Virtual Machine">Edit VM</Button>
+<Button aria-label="Run Playbook">Run Playbook</Button>
+<Button aria-label="Clone Virtual Machine">Clone VM</Button>
     </Box>
   );
 }

@@ -14,13 +14,17 @@ import {
   Select,
 } from '@mui/material';
 import { MRT_ColumnDef } from 'material-react-table';
-import { VirtualMachine } from './VirtualMachine';
+import { VirtualMachine, CreateVirtualMachineRequest } from './VirtualMachine';
+import { Host, fetchHosts } from './Host';
+import { Folder, fetchFolders } from './Folder';
+import { vmColumns } from './ModalColumns';
+import { useFetchHostsAndFolders } from './useHostsAndFolders';
 
 type CreateModalProps = {
   open: boolean;
   onClose: () => void;
-  onSubmit: (values: VirtualMachine) => void;
-  columns: MRT_ColumnDef<VirtualMachine>[];
+  onSubmit: (values: CreateVirtualMachineRequest) => void;
+  columns: MRT_ColumnDef<CreateVirtualMachineRequest>[];
 };
 
 const CreateNewVirtualMachineModal = ({
@@ -29,22 +33,20 @@ const CreateNewVirtualMachineModal = ({
   onClose,
   onSubmit,
 }: CreateModalProps) => {
-  const [values, setValues] = useState<any>(() =>
-    columns.reduce((acc, column) => {
+  const [values, setValues] = useState<CreateVirtualMachineRequest>(() => //maybe can use partial here?
+  columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = '';
       return acc;
     }, {} as any)
   );
 
-  const [hosts, setHosts] = useState<string[]>([]);
-  const [folders, setFolders] = useState<string[]>([]);
+  const { hosts, folders } = useFetchHostsAndFolders(open);
+
 
   const fetchData = async () => {
-    const fetchedHosts = await fetchHosts(); // Replace with your function to fetch hosts from your API
-    const fetchedFolders = await fetchFolders(); // Replace with your function to fetch folders from your API
+    const fetchedHosts = await fetchHosts(); 
+    const fetchedFolders = await fetchFolders(); 
 
-    setHosts(fetchedHosts);
-    setFolders(fetchedFolders);
   };
 
   useEffect(() => {
@@ -54,7 +56,7 @@ const CreateNewVirtualMachineModal = ({
   }, [open]);
 
   const handleSubmit = () => {
-    //put your validation logic here
+    console.log("handleSubmit called"); 
     onSubmit(values);
     onClose();
   };
@@ -74,7 +76,7 @@ const CreateNewVirtualMachineModal = ({
               gap: '1.5rem',
             }}
           >
-            {columns.map((column) => (
+            {vmColumns.map((column) => (
               column.accessorKey === 'host' ? (
                 <FormControl fullWidth>
                   <InputLabel htmlFor="host">Host</InputLabel>
@@ -85,8 +87,8 @@ const CreateNewVirtualMachineModal = ({
                     onChange={(e) => setValues({ ...values, [e.target.name]: e.target.value })}
                   >
                     {hosts.map((host) => (
-                      <MenuItem key={host} value={host}>
-                        {host}
+                      <MenuItem key={host.ID} value={host.VsphereID}>
+                        {`Host - ${host.Name}`}
                       </MenuItem>
                     ))}
                   </Select>
@@ -101,8 +103,8 @@ const CreateNewVirtualMachineModal = ({
                     onChange={(e) => setValues({ ...values, [e.target.name]: e.target.value })}
                   >
                     {folders.map((folder) => (
-                      <MenuItem key={folder} value={folder}>
-                        {folder}
+                      <MenuItem key={folder.ID} value={folder.VsphereID}>
+                        {folder.Name}
                       </MenuItem>
                     ))}
                   </Select>
