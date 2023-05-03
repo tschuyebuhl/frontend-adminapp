@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { getVirtualMachines, VirtualMachine, createVirtualMachine, CreateVirtualMachineRequest } from './VirtualMachine';
 import MaterialReactTable from 'material-react-table';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +40,7 @@ const vmColumns: MRT_ColumnDef<CreateVirtualMachineRequest>[] = [
     header: 'Folder',
     accessorKey: 'folder',
   },
-  ];
+];
 
 export function VirtualMachinesList() {
   const { keycloak } = useKeycloak();
@@ -50,10 +50,6 @@ export function VirtualMachinesList() {
       accessorKey: 'Name',
       header: 'Name',
     },
-    /*{
-      accessorKey: 'GuestOs',
-      header: 'Guest OS',
-    },*/
     {
       accessorKey: 'PowerState',
       header: 'Power State',
@@ -75,25 +71,12 @@ export function VirtualMachinesList() {
       header: 'Customer',
     },
   ], []);
-  //const [virtualMachines, setVirtualMachines] = useState<VirtualMachine[]>([]);
-  //const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
   const {
     data: virtualMachines,
     isLoading: loading,
   } = useQuery(['virtualMachines'], getVirtualMachines);
-
-  useEffect(() => {
-    async function fetchVirtualMachines() {
-      const data = await getVirtualMachines();
-      setLoading(false);
-      setVirtualMachines(data.map(vm => ({ ...vm })));
-    }
-
-    if (keycloak.authenticated || !strictMode) {
-      fetchVirtualMachines();
-    }
-  }, [keycloak.authenticated]);
 
   function handleClick(name: string) {
     navigate('/virtual-machines/' + name);
@@ -101,17 +84,11 @@ export function VirtualMachinesList() {
 
   const handleCreateNewRow = async (values: CreateVirtualMachineRequest) => {
     try {
-      // Call the function to create a new virtual machine through your API
       const createdVm = await createVirtualMachine(values);
-
-      // Update the virtualMachines state with the new virtual machine
-      setVirtualMachines((prevVms) => [...prevVms, createdVm]);
-
-      // Close the modal
+      // setVirtualMachines((prevVms) => [...prevVms, createdVm]);
       handleCreateModalClose();
     } catch (error) {
       console.error("Error creating a new virtual machine:", error);
-      // You can also show a notification or an alert to inform the user about the error
     }
   };
 
@@ -143,48 +120,48 @@ export function VirtualMachinesList() {
       <Typography
         variant="h4"
         sx={{ mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-      >
-        Virtual Machines
-      </Typography>
-      <MaterialReactTable
-        columns={columns}
-        data={virtualMachines}
-        enableColumnResizing={false}
-        enableRowActions={true}
-        positionActionsColumn="last"
-        displayColumnDefOptions={{
-          'mrt-row-actions': {
-            header: 'VM Details',
-            size: 15,
-          },
-        }}
-        renderRowActions={({ row }) => [
-          <Button variant="outlined" component={Link} to={`/virtual-machines/${row.original.Name}`}>
-          Details
-          </Button>,
-        ]}
-        renderTopToolbarCustomActions={() => (
-          <Button color="secondary" onClick={handleCreateModalOpen} variant="contained">
-            Create New Virtual Machine
-          </Button>
-        )}
-        muiTablePaginationProps={{
-          rowsPerPageOptions: [5, 10, 25],
-          showFirstButton: true,
-          showLastButton: true,
-        }}
-        muiTableProps={{
-          sx: {
-          //  tableLayout: 'fixed',
-          },
-        }}
-      />
-      <CreateNewVirtualMachineModal
-        open={createModalOpen}
-        onClose={handleCreateModalClose}
-        onSubmit={handleCreateNewRow}
-        columns={vmColumns}
-      />
-    </Box>
+        >
+          Virtual Machines
+        </Typography>
+        <MaterialReactTable
+          columns={columns}
+          data={virtualMachines}
+          enableColumnResizing={false}
+          enableRowActions={true}
+          positionActionsColumn="last"
+          displayColumnDefOptions={{
+            'mrt-row-actions': {
+              header: 'VM Details',
+              size: 15,
+            },
+          }}
+          renderRowActions={({ row }) => [
+            <Button variant="outlined" component={Link} to={`/virtual-machines/${row.original.Name}`}>
+            Details
+            </Button>,
+          ]}
+          renderTopToolbarCustomActions={() => (
+            <Button color="secondary" onClick={handleCreateModalOpen} variant="contained">
+              Create New Virtual Machine
+            </Button>
+          )}
+          muiTablePaginationProps={{
+            rowsPerPageOptions: [5, 10, 25],
+            showFirstButton: true,
+            showLastButton: true,
+          }}
+          muiTableProps={{
+            sx: {
+            //  tableLayout: 'fixed',
+            },
+          }}
+        />
+        <CreateNewVirtualMachineModal
+          open={createModalOpen}
+          onClose={handleCreateModalClose}
+          onSubmit={handleCreateNewRow}
+          columns={vmColumns}
+        />
+      </Box>
   );
 }
