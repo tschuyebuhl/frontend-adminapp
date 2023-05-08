@@ -10,8 +10,13 @@ import {
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {deleteVirtualMachine, getVirtualMachines} from './VirtualMachine';
+interface VMDeleteDialogProps {
+  openDeleteDialog: boolean;
+  setOpenDeleteDialog: (open: boolean) => void;
+}
 
-export function VMDeleteDialog({openDeleteDialog, setOpenDeleteDialog}) {
+
+export function VMDeleteDialog(props: VMDeleteDialogProps) {
 
 const { name } = useParams<string>();
 
@@ -23,7 +28,7 @@ async function handleDelete() {
   setLoading(true);
   await deleteVirtualMachine(name?  name : '')
     .then(() => {
-      setOpenDeleteDialog(false);
+      props.setOpenDeleteDialog(false);
       navigate('/virtual-machines');
     })
     .catch((error) => console.error(error));
@@ -34,13 +39,13 @@ async function handleDelete() {
 
 
 function handleCloseDeleteDialog() {
-  setOpenDeleteDialog(false);
+  props.setOpenDeleteDialog(false);
 }
 
 
   return (
     <>
-  <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+  <Dialog open={props.openDeleteDialog} onClose={handleCloseDeleteDialog}>
   <DialogTitle>Delete Virtual Machine</DialogTitle>
   <DialogContent>
     <DialogContentText>

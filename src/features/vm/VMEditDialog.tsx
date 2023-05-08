@@ -12,7 +12,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {VirtualMachine, getVirtualMachine} from './VirtualMachine';
 import {useMutation, useQuery} from '@tanstack/react-query';
 
-export function VMEditDialog({openEditDialog, setOpenEditDialog}) {
+interface VMEditDialogProps {
+openEditDialog: boolean;
+setOpenEditDialog: (open: boolean) => void;
+}
+
+export function VMEditDialog({openEditDialog, setOpenEditDialog}: VMEditDialogProps) { //maybe better than just "props"?
 
 const { name } = useParams<string>();
 //let name = "test20";
