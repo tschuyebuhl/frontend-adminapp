@@ -12,8 +12,8 @@ import { ReactKeycloakProvider } from '@react-keycloak/web';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: Infinity,
-      cacheTime: Infinity,
+      staleTime: 3000,
+      cacheTime: 3000,
     },
   },
 });

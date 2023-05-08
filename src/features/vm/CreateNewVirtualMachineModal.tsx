@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  CircularProgress,
   DialogTitle,
   Stack,
   TextField,
@@ -14,7 +15,7 @@ import {
   Select,
 } from '@mui/material';
 import { MRT_ColumnDef } from 'material-react-table';
-import { VirtualMachine, CreateVirtualMachineRequest } from './VirtualMachine';
+import { VirtualMachine, CreateVirtualMachineRequest, getVirtualMachines } from './VirtualMachine';
 import { Host, fetchHosts } from './Host';
 import { Folder, fetchFolders } from './Folder';
 import { vmColumns } from './ModalColumns';
@@ -23,7 +24,7 @@ import { useFetchHostsAndFolders } from './useHostsAndFolders';
 type CreateModalProps = {
   open: boolean;
   onClose: () => void;
-  onSubmit: (values: CreateVirtualMachineRequest) => void;
+  onSubmit: (values: CreateVirtualMachineRequest) => Promise<void>;
   columns: MRT_ColumnDef<CreateVirtualMachineRequest>[];
 };
 
@@ -55,24 +56,29 @@ const CreateNewVirtualMachineModal = ({
     }
   }, [open]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("handleSubmit called"); 
-    onSubmit(values);
+    setLoading(true);
+    await onSubmit(values);
+    setLoading(false);
     onClose();
+    getVirtualMachines();
   };
+
+  const [loading, setLoading] = useState(false);
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
     >
-      <DialogTitle textAlign="center">Create New Virtual Machine</DialogTitle>
+      <DialogTitle sx={{ margin: 1.27 }} textAlign="center">VM Properties</DialogTitle>
       <DialogContent>
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
               width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
+              minWidth: { xs: '300px', sm: '300px', md: '400px' },
               gap: '1.5rem',
             }}
           >
@@ -123,13 +129,19 @@ const CreateNewVirtualMachineModal = ({
       </DialogContent>
 
       <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button 
+        onClick={onClose}
+        color="primary"
+        variant="contained"
+        >
+          Cancel</Button>
         <Button
           color="secondary"
           onClick={handleSubmit}
           variant="contained"
+          disabled={loading}
           >
-          Create New Virtual Machine
+          {loading ? <CircularProgress size={24} /> : 'Create'}
         </Button>
       </DialogActions>
     </Dialog>

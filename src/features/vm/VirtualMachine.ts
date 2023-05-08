@@ -36,19 +36,31 @@ export async function getVirtualMachine({
   }
   return response.data;
 }
-export const createVirtualMachine = async (newVmData: CreateVirtualMachineRequest): Promise<VirtualMachine> => {
-  const response = await fetch('/api/v1/virtual-machines', { // Replace with your API endpoint
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newVmData),
-  });
 
-  if (!response.ok) {
+export async function deleteVirtualMachine(vmName: string) {
+
+  const response = await api.delete(`/api/v1/virtual-machines/${vmName}`);
+  if (response.status !== 200) {
+    throw new Error(`${vmName} delete not ok`);
+  }
+  return response.data;
+}
+
+export const createVirtualMachine = async (newVmData: CreateVirtualMachineRequest): Promise<VirtualMachine> => {
+  const options = {
+    method: 'POST',
+    url: '/api/v1/virtual-machines',
+    headers: {
+        'content-type': 'application/json',
+    },
+    data: JSON.stringify(newVmData),
+};
+const response = await api.request(options)
+
+  if (response.status != 201) {
     throw new Error(`Failed to create a new virtual machine: ${response.statusText}`);
   }
 
-  const createdVm = await response.json();
+  const createdVm = response.data();
   return createdVm;
 };

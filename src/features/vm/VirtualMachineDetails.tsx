@@ -1,19 +1,17 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getVirtualMachine } from './VirtualMachine';
-import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import { useQuery} from '@tanstack/react-query';
 
 import {
   Box,
   Button,
   CircularProgress,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
   Typography,
 } from '@mui/material';
+import { VMEditDialog } from './VMEditDialog';
+import { VMDeleteDialog } from './VMDeleteDialog';
+import { Loading } from '../../components/Loading';
 
 export function VirtualMachineDetails() {
   const { name } = useParams<string>();
@@ -21,45 +19,33 @@ export function VirtualMachineDetails() {
   const results = useQuery(['name', name], getVirtualMachine);
   const virtualMachine = results.data;
 
-  const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
 
-  if (results.isLoading) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '100vh',
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+  function handleCloseDeleteDialog() {
+    setOpenDeleteDialog(false);
   }
+  if (results.isLoading) {
+      <Loading />
+  }
+
 
   function handleClick() {
     navigate('/virtual-machines');
   }
 
-  function handleDelete() {
-    fetch(`/api/v1/virtual-machines/${name}`, { method: 'DELETE' })
-      .then(() => navigate('/virtual-machines'))
-      .catch((error) => console.error(error));
-    handleClose();
+  function handleClickOpenEditDialog() {
+    setOpenEditDialog(true);
   }
-
-  function handleClickOpen() {
-    setOpen(true);
-  }
-
-  function handleClose() {
-    setOpen(false);
+  
+  function handleClickOpenDeleteDialog() {
+    setOpenDeleteDialog(true);
   }
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h4" sx={{ mb: 2 }}>
+    <Box sx={{ mb: 2}}>
+      <Typography variant="h4"  sx={{ mb: 2 }}>
         Virtual Machine Details:
       </Typography>
       <Button onClick={handleClick}>Go back</Button> <br />
@@ -74,31 +60,25 @@ export function VirtualMachineDetails() {
       <Box sx={{ mb: 2 }}>
         <Typography variant="h6">vCPU: {virtualMachine?.NumCpus}</Typography>
       </Box>
-      <Button aria-label="Edit Virtual Machine">Edit VM</Button>
-      <Button aria-label="Run Playbook">Run Playbook</Button>
-      <Button aria-label="Clone Virtual Machine">Clone VM</Button>
+      <Button aria-label="Edit Virtual Machine" variant="outlined" onClick={handleClickOpenEditDialog}>
+        Edit VM
+      </Button>
+      <Button aria-label="Run Playbook" variant="outlined">Run Playbook</Button>
+      <Button aria-label="Clone Virtual Machine" variant="outlined">Clone VM</Button>
       <Button
         color="warning"
         variant="contained"
         aria-label="Delete Virtual Machine"
-        onClick={handleClickOpen}
-      >
-        Delete VM
+        onClick={handleClickOpenDeleteDialog}
+        >
+        Delete
       </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Delete Virtual Machine</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this virtual machine?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleDelete} color="warning" variant="contained">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <VMDeleteDialog 
+       setOpenDeleteDialog={setOpenDeleteDialog}
+       openDeleteDialog={openDeleteDialog}/>
+      <VMEditDialog 
+      setOpenEditDialog={setOpenEditDialog}
+      openEditDialog={openEditDialog}/>
     </Box>
   );
 }

@@ -7,70 +7,21 @@ import CreateNewVirtualMachineModal from "./CreateNewVirtualMachineModal";
 import { MRT_ColumnDef } from 'material-react-table';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import {columns, vmColumns} from './ModalColumns';
 
 import {
   Box,
   Button,
   Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Stack,
-  TextField,
-  CircularProgress
 } from '@mui/material';
+import { Loading } from '../../components/Loading';
 
 let strictMode = false;
-
-const vmColumns: MRT_ColumnDef<CreateVirtualMachineRequest>[] = [
-  {
-    header: 'Name',
-    accessorKey: 'name',
-  },
-  {
-    header: 'IP',
-    accessorKey: 'ip',
-  },
-  {
-    header: 'Host',
-    accessorKey: 'host',
-  },
-  {
-    header: 'Folder',
-    accessorKey: 'folder',
-  },
-];
 
 export function VirtualMachinesList() {
   const { keycloak } = useKeycloak();
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const columns = useMemo(() => [
-    {
-      accessorKey: 'Name',
-      header: 'Name',
-    },
-    {
-      accessorKey: 'PowerState',
-      header: 'Power State',
-    },
-    {
-      accessorKey: 'NumCpus',
-      header: 'vCPU',
-    },
-    {
-      accessorKey: 'MemoryMB',
-      header: 'RAM',
-    },
-    {
-      accessorKey: 'HostName',
-      header: 'Host',
-    },
-    {
-      accessorKey: 'CustomerName',
-      header: 'Customer',
-    },
-  ], []);
+
 
   const navigate = useNavigate();
   const {
@@ -90,6 +41,7 @@ export function VirtualMachinesList() {
     } catch (error) {
       console.error("Error creating a new virtual machine:", error);
     }
+    getVirtualMachines();
   };
 
   const handleCreateModalClose = () => {
@@ -101,31 +53,21 @@ export function VirtualMachinesList() {
   };
 
   if (loading) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '100vh',
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+    <Loading />
   }
 
   return (
     <Box sx={{ p: 2 }}>
       <Typography
         variant="h4"
-        sx={{ mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+        textAlign="center"
+        sx={{ mb: 1}}
         >
           Virtual Machines
         </Typography>
         <MaterialReactTable
           columns={columns}
-          data={virtualMachines}
+          data={virtualMachines? virtualMachines : []}
           enableColumnResizing={false}
           enableRowActions={true}
           positionActionsColumn="last"
@@ -142,7 +84,7 @@ export function VirtualMachinesList() {
           ]}
           renderTopToolbarCustomActions={() => (
             <Button color="secondary" onClick={handleCreateModalOpen} variant="contained">
-              Create New Virtual Machine
+              Create a New VM
             </Button>
           )}
           muiTablePaginationProps={{
