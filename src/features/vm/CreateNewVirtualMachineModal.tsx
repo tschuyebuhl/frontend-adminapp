@@ -93,7 +93,7 @@ const CreateNewVirtualMachineModal = ({
                   >
                     {hosts.map((host) => (
                       <MenuItem key={host.ID} value={host.VsphereID}>
-                        {`Host - ${host.Name}`}
+                        {`${host.Name}`}
                       </MenuItem>
                     ))}
                   </Select>

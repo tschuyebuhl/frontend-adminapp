@@ -53,10 +53,15 @@ function handleCloseDeleteDialog() {
     </DialogContentText>
   </DialogContent>
   <DialogActions>
-    <Button onClick={handleCloseDeleteDialog}>Cancel</Button>
+    <Button 
+    onClick={handleCloseDeleteDialog}
+    variant="contained"
+    color="secondary"
+    >Cancel</Button>
     <Button 
     onClick={handleDelete}
     color="warning"
+    variant="contained"
     disabled={loading} 
     >
     {loading ? <CircularProgress size={24} /> : 'Delete'}

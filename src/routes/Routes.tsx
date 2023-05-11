@@ -5,6 +5,7 @@ import { TicketList } from '../features/ticket/TicketList';
 import ErrorPage from '../pages/ErrorPage';
 import {CreateProject} from "../features/project/CreateProject";
 import ProjectList from "../features/project/ProjectList";
+import { IPAM } from '../features/ipam/IPAM';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: 'projects',
     element: <ProjectList />
+  },
+  {
+    path: 'ipam',
+    element: <IPAM />
   }
 ]);
 
