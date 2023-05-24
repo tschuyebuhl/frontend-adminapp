@@ -18,6 +18,11 @@ export interface CreateVirtualMachineRequest {
   host: string;
   folder: string;
 }
+export interface powerResponse {
+  message: string;
+  status: number;
+}
+
 
 export async function getVirtualMachines(): Promise<VirtualMachine[]> {
   const response = await api.get('/api/v1/virtual-machines/');
@@ -44,6 +49,26 @@ export async function deleteVirtualMachine(vmName: string) {
     throw new Error(`${vmName} delete not ok`);
   }
   return response.data;
+}
+
+export async function stopVirtualMachine(vmName: string): Promise<powerResponse> {
+
+  const response = await api.post(`/api/v1/virtual-machines/${vmName}/power!stop`);
+  if (response.status !== 200) {
+    throw new Error(`${vmName} exception during stop`);
+    return { message: response.data, status: response.status};
+  }
+  return { message: response.data, status: response.status};
+}
+
+export async function startVirtualMachine(vmName: string): Promise<powerResponse> {
+
+  const response = await api.post(`/api/v1/virtual-machines/${vmName}/power!start`);
+  if (response.status !== 200) {
+    throw new Error(`${vmName} exception during start`);
+    return { message: response.data, status: response.status};
+  }
+  return { message: response.data, status: response.status};
 }
 
 export const createVirtualMachine = async (newVmData: CreateVirtualMachineRequest): Promise<VirtualMachine> => {
