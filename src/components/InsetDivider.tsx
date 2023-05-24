@@ -24,7 +24,7 @@ export default function InsetDividers() {
             <ImageIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary="Photos" secondary="Jan 9, 2014" />
+        <ListItemText primary="VM Downtime" secondary="19 April 2023" />
       </ListItem>
       <Divider variant="inset" component="li" />
       <ListItem>
@@ -33,7 +33,7 @@ export default function InsetDividers() {
             <WorkIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary="Work" secondary="Jan 7, 2014" />
+        <ListItemText primary="User-reported error" secondary="17 April 2023" />
       </ListItem>
       <Divider variant="inset" component="li" />
       <ListItem>
@@ -42,7 +42,7 @@ export default function InsetDividers() {
             <BeachAccessIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary="Vacation" secondary="July 20, 2014" />
+        <ListItemText primary="Running application healthchecks failed" secondary="1 April 2023" />
       </ListItem>
     </List>
   );

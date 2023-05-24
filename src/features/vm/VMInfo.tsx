@@ -5,6 +5,7 @@ import { getVirtualMachine } from "./VirtualMachine";
 import { VMCard } from "./VMCard";
 import { ChipList } from "./ChipList";
 import { useParams } from "react-router-dom";
+import InsetDividers from "../../components/InsetDivider";
 
 export default function VMInfo() { 
 
@@ -49,17 +50,7 @@ return (
     </VMCard>
 
     <VMCard title="Incidents">
-      <Typography variant="h5" component="div">
-        benevolent
-      </Typography>
-      <Typography sx={{ mb: 1.5 }} color="text.secondary">
-        adjective
-      </Typography>
-      <Typography variant="body2">
-        well meaning and kindly.
-        <br />
-        {'"a benevolent smile"'}
-      </Typography>
+      <InsetDividers />
     </VMCard>
     </Box>
 );

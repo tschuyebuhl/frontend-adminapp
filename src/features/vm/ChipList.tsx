@@ -1,11 +1,12 @@
-import { Paper, ListItem, Chip } from "@mui/material";
+import { Paper, ListItem, Chip, Avatar } from "@mui/material";
 
 interface ChipListProps {
   chipData: readonly ChipData[];
 }
 
 export const ChipList: React.FC<ChipListProps> = ({ chipData }) => (
-  <Paper 
+  <>
+  {/* <Paper 
     sx={{
       display: 'flex',
       justifyContent: 'center',
@@ -16,10 +17,17 @@ export const ChipList: React.FC<ChipListProps> = ({ chipData }) => (
     }}
     component="ul"
   >
-    {chipData.map((data) => (
+   {chipData.map((data) => (
       <ListItem key={data.key}>
         <Chip label={data.label} />
       </ListItem>
-    ))}
-  </Paper>
+    ))} *
+   </Paper> */}
+
+      <Chip avatar={<Avatar src="/nginx.png"/>} label={'nginx'} />
+      <Chip avatar={<Avatar src="/apache.png"/>} label={'Apache HTTP Server'} />
+      <Chip avatar={<Avatar src="/docker.png"/>} label={'Docker'} />
+      <Chip avatar={<Avatar src="/postgres.png"/>} label={'PostgreSQL'} />
+      <Chip avatar={<Avatar src="/zabbix.png"/>} label={'Zabbix'} />
+</>
 );

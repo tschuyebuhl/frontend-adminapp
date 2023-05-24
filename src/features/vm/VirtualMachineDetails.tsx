@@ -3,8 +3,10 @@ import { getVirtualMachine, stopVirtualMachine, startVirtualMachine } from './Vi
 import { useQuery } from '@tanstack/react-query';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
+  Avatar,
   Box,
   Button,
+  Chip,
   Typography,
 } from '@mui/material';
 import { Loading } from '../../components/Loading';

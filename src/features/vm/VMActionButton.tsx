@@ -3,8 +3,8 @@ import { VMActionButtonProps } from "./VMActionButtonProps";
 
 const buttonStyle = {
   marginBottom: '8px',
-  marginRight: '4px',
-  width: '171px',
+  marginRight: '2px',
+  width: '145px',
 };
 
 export const VMActionButton: React.FC<VMActionButtonProps> = ({

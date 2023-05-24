@@ -85,43 +85,43 @@ export default function VMActions() {
     <>
       <Box sx={containerStyle}>
         <VMActionButton 
-          label="Edit Virtual Machine" 
+          label="Edit" 
           onClick={handleClickOpenEditDialog}
           icon={EditIcon}
         />
         <VMActionButton 
-          label="Run Playbook" 
+          label="Playbooks" 
           icon={BuildIcon}
         />
         <VMActionButton 
-          label="Clone Virtual Machine" 
+          label="Clone " 
           icon={FileCopyIcon}
         />
         <VMActionButton 
-          label="Attach VM Console" 
+          label="Console" 
           color="primary"
           icon={TerminalIcon}
         />
         <VMActionButton 
-          label="Power On Virtual Machine" 
+          label="Power On" 
           onClick={startVM} 
           loading={powerOnLoading} 
           icon={PlayArrowIcon}
         />
         <VMActionButton 
-          label="Power Off Virtual Machine" 
+          label="Power Off" 
           onClick={stopVM} 
           loading={powerOffLoading} 
           icon={StopIcon}
         />
         <VMActionButton 
-          label="Restart Virtual Machine" 
+          label="Restart" 
           onClick={stopVM} 
           loading={restartLoading} 
           icon={RestartAltIcon}
         />
         <VMActionButton 
-          label="Delete Virtual Machine" 
+          label="Delete" 
           onClick={handleClickOpenDeleteDialog} 
           color="warning"
           icon={DeleteIcon}
