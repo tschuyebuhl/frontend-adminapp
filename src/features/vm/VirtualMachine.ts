@@ -71,6 +71,17 @@ export async function startVirtualMachine(vmName: string): Promise<powerResponse
   return { message: response.data, status: response.status};
 }
 
+
+export async function restartVirtualMachine(vmName: string): Promise<powerResponse> {
+
+  const response = await api.post(`/api/v1/virtual-machines/${vmName}/power!restart`);
+  if (response.status !== 200) {
+    throw new Error(`${vmName} exception during start`);
+    return { message: response.data, status: response.status};
+  }
+  return { message: response.data, status: response.status};
+}
+
 export const createVirtualMachine = async (newVmData: CreateVirtualMachineRequest): Promise<VirtualMachine> => {
   const options = {
     method: 'POST',

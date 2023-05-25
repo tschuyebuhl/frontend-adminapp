@@ -6,6 +6,7 @@ interface VMData {
   Network: string;
   IP: string;
   Disk: string;
+  PowerState: boolean;
   installedSoftware: string[];
 }
 

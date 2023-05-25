@@ -22,7 +22,7 @@ export default function VMActions() {
   const containerStyle = {
     display: 'flex',
     flexDirection: 'row',
-    mb: 2,
+    border: 1,
     gap: '4px',
   };
 
@@ -38,15 +38,6 @@ export default function VMActions() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
-  function handleCloseDeleteDialog() {
-    setOpenDeleteDialog(false);
-  }
-
-
-  function handleClick() {
-    navigate('/virtual-machines');
-  }
-
   function handleClickOpenEditDialog() {
     setOpenEditDialog(true);
   }
@@ -54,6 +45,21 @@ export default function VMActions() {
   function handleClickOpenDeleteDialog() {
     setOpenDeleteDialog(true);
   }
+  function restartVM() {
+    setRestartLoading(true);
+    let res = startVirtualMachine(name ? name : '');
+    res.then((v) => {
+      if (v.status === 200) {
+        setRestartLoading(false);
+        setSuccessOpen(true);
+      }
+    }).catch((e) => {
+      setRestartLoading(false);
+      setErrorOpen(true);
+    });
+  }
+
+
   function startVM() {
     setPowerOnLoading(true);
     let res = startVirtualMachine(name ? name : '');
@@ -116,7 +122,7 @@ export default function VMActions() {
         />
         <VMActionButton 
           label="Restart" 
-          onClick={stopVM} 
+          onClick={restartVM} 
           loading={restartLoading} 
           icon={RestartAltIcon}
         />

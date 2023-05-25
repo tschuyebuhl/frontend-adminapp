@@ -17,6 +17,7 @@ const testVm = {
   Network: '172 - Common',
   IP: '10.16.72.201',
   Disk: '100 GB',
+  PowerState: 'true',
   installedSoftware: ['zabbix','docker','postgresql','nginx']
 }
 
@@ -40,6 +41,7 @@ return (
       <Typography>RAM: {testVm.MemoryMB} MB</Typography>
       <Typography>Disk: {testVm.Disk}</Typography>
       <Typography>Network: {testVm.Network}, IP Address: {testVm.IP}</Typography>
+      <Typography>Power State: {testVm.PowerState ? 'On' : 'Off'}</Typography>
       {/*<Typography>RAM: {virtualMachine?.MemoryMB ? virtualMachine.MemoryMB / 1024 : null} GB</Typography>
       <Typography>vCPU: {virtualMachine?.NumCpus}</Typography> */}
     </VMCard>
@@ -48,7 +50,6 @@ return (
       <Typography>{testVm.Project}</Typography>
       <ChipList chipData={chipData} />
     </VMCard>
-
     <VMCard title="Incidents">
       <InsetDividers />
     </VMCard>
