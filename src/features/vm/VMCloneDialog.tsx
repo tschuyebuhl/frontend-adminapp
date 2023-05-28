@@ -28,7 +28,6 @@ interface VMCloneDialogProps {
 export function VMCloneDialog(props: VMCloneDialogProps) {
 
 const { name } = useParams<string>();
-
 const [loading, setLoading] = useState(false);
 const [targetName, setTargetName] = useState<string>('');
 const [targetHost, setTargetHost] = useState<string>('');
@@ -55,16 +54,26 @@ function handleFolderChange(event: SelectChangeEvent<string>) {
 function handleDatastoreChange(event: SelectChangeEvent<string>) {
   setTargetDatastore(event.target.value);
 }
+
 async function handleClone() {
   setLoading(true);
-  await cloneVirtualMachine(data)
-    .then(() => {
-      props.setOpenCloneDialog(false);
-      navigate('/virtual-machines');
-    })
-    .catch((error) => console.error(error));
-    setLoading(false);
-    getVirtualMachines();
+  
+  const cloneRequest: CloneVirtualMachineRequest = {
+    name: targetName,
+    datastore: targetDatastore,
+    host: targetHost,
+    folder: targetFolder,
+  };
+
+  try {
+    await props.onSubmit(cloneRequest);
+    props.setOpenCloneDialog(false);
+    navigate('/virtual-machines');
+  } catch (error) {
+    console.error(error);
+  }
+  
+  setLoading(false);
 }
 
 function handleCloseCloneDialog() {

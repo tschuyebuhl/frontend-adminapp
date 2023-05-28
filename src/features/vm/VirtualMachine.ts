@@ -90,10 +90,10 @@ export async function restartVirtualMachine(vmName: string): Promise<powerRespon
   return { message: response.data, status: response.status};
 }
 
-export const createVirtualMachine = async (newVmData: CreateVirtualMachineRequest): Promise<VirtualMachine> => {
+export const createVirtualMachine = async (vmName:string, newVmData: CreateVirtualMachineRequest): Promise<VirtualMachine> => {
   const options = {
     method: 'POST',
-    url: '/api/v1/virtual-machines',
+    url: `/api/v1/virtual-machines/${vmName}/clone`,
     headers: {
         'content-type': 'application/json',
     },

@@ -1,6 +1,6 @@
 import { Alert, Box, Button, CircularProgress, Snackbar } from "@mui/material";
 import { useState } from "react";
-import { getVirtualMachine, startVirtualMachine, stopVirtualMachine } from "./VirtualMachine";
+import { CloneVirtualMachineRequest, getVirtualMachine, startVirtualMachine, stopVirtualMachine } from "./VirtualMachine";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import EditIcon from '@mui/icons-material/Edit';
@@ -55,7 +55,13 @@ export default function VMActions() {
   function handleClickOpenCloneDialog() {
     setOpenCloneDialog(true);
   }
-
+  
+  function handleCloneSubmit(values: CloneVirtualMachineRequest): Promise<void> {
+    // Handle the submission logic here, e.g., make API calls or perform other operations
+    
+    // Return a Promise that resolves when the submission is complete
+    return Promise.resolve();
+  }
   function restartVM() {
     setRestartLoading(true);
     let res = startVirtualMachine(name ? name : '');
@@ -163,7 +169,9 @@ export default function VMActions() {
         openEditDialog={openEditDialog}/>
         <VMCloneDialog
         setOpenCloneDialog={setOpenCloneDialog}
-        openCloneDialog={openCloneDialog} />
+        openCloneDialog={openCloneDialog}
+        onSubmit={handleCloneSubmit}
+        />
       <AlertSnackbar
         open={errorOpen}
         handleClose={() => setErrorOpen(false)}
