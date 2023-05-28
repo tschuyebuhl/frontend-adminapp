@@ -51,18 +51,19 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth={false}>
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
+            { /* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */ }
+            <Avatar src='/resized.png' sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
             href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'sans-serif',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
+              fontFamily: 'roboto',
+              fontWeight: 300,
+              letterSpacing: '0.12rem',
               color: 'inherit',
               textDecoration: 'none',
             }}

@@ -26,6 +26,37 @@ type CreateModalProps = {
   onSubmit: (values: CreateVirtualMachineRequest) => Promise<void>;
   columns: MRT_ColumnDef<CreateVirtualMachineRequest>[];
 };
+const isValidIP = (ip: string) => {
+  const regex = new RegExp(
+    "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
+  );
+  return regex.test(ip);
+};
+
+const validateForm = (values: CreateVirtualMachineRequest) => {
+  const errors: { [key in keyof CreateVirtualMachineRequest]?: string } = {};
+  
+  if (!values.name) {
+    errors.name = "Name is required";
+  }
+
+  if (!values.ip) {
+    errors.ip = "IP address is required";
+  } else if (!isValidIP(values.ip)) {
+    errors.ip = "IP address is invalid";
+  }
+
+  if (!values.host) {
+    errors.host = "Host is required";
+  }
+
+  if (!values.folder) {
+    errors.folder = "Folder is required";
+  }
+
+  return errors;
+};
+
 
 const CreateNewVirtualMachineModal = ({
   open,
@@ -39,6 +70,7 @@ const CreateNewVirtualMachineModal = ({
       return acc;
     }, {} as any)
   );
+  const [errors, setErrors] = useState<{ [key in keyof CreateVirtualMachineRequest]?: string }>({});
 
   const { hosts, folders } = useFetchHostsAndFolders(open);
 
@@ -52,8 +84,10 @@ const CreateNewVirtualMachineModal = ({
   useEffect(() => {
     if (open) {
       fetchData();
+      const errors = validateForm(values);
+      setErrors(errors);
     }
-  }, [open]);
+  }, [open, values]);
 
   const handleSubmit = async () => {
     console.log("handleSubmit called"); 
@@ -71,7 +105,7 @@ const CreateNewVirtualMachineModal = ({
       open={open}
       onClose={onClose}
     >
-      <DialogTitle sx={{ margin: 1.27 }} textAlign="center">VM Properties</DialogTitle>
+      <DialogTitle sx={{ margin: '0.25rem' }} textAlign="center">VM Properties</DialogTitle>
       <DialogContent>
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
@@ -79,6 +113,7 @@ const CreateNewVirtualMachineModal = ({
               width: '100%',
               minWidth: { xs: '300px', sm: '300px', md: '400px' },
               gap: '1.5rem',
+              mt: '5px'
             }}
           >
             {vmColumns.map((column) => (
@@ -119,6 +154,8 @@ const CreateNewVirtualMachineModal = ({
                   key={column.accessorKey}
                   label={column.header}
                   name={column.accessorKey}
+                  helperText={errors[column.accessorKey ? column.accessorKey : 'name']}
+                  error={Boolean(errors[column.accessorKey ? column.accessorKey : 'name'])}
                   onChange={(e) => setValues({ ...values, [e.target.name]: e.target.value })}
                 />
               )
@@ -138,7 +175,7 @@ const CreateNewVirtualMachineModal = ({
           color="secondary"
           onClick={handleSubmit}
           variant="contained"
-          disabled={loading}
+          disabled={loading || Object.keys(errors).length > 0}
           >
           {loading ? <CircularProgress size={24} /> : 'Create'}
         </Button>

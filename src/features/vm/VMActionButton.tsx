@@ -2,9 +2,8 @@ import { Button, CircularProgress } from "@mui/material";
 import { VMActionButtonProps } from "./VMActionButtonProps";
 
 const buttonStyle = {
-  marginBottom: '8px',
-  marginRight: '2px',
-  width: '145px',
+  width: '190px',
+  margin: 'auto',
 };
 
 export const VMActionButton: React.FC<VMActionButtonProps> = ({

@@ -8,10 +8,8 @@ interface VMCardProps {
 
 const cardStyle = {
   border: 1,
-  width: '33%',
-  ml: '0.3%',
-  mr: '0.3%',
-  mb: 3,
+  width: '33.33%',
+  margin: '0.5rem',
 }
 export const VMCard: React.FC<VMCardProps> = ({ title, children }) => (
   <Card sx={cardStyle}>

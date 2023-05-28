@@ -24,6 +24,10 @@ export default function VMActions() {
     flexDirection: 'row',
     border: 1,
     gap: '4px',
+    width: '99.2%',
+    padding: '1rem',
+    borderRadius:'0.5rem',
+    margin: 'auto'
   };
 
   const { name } = useParams<string>();
@@ -87,9 +91,17 @@ export default function VMActions() {
       setErrorOpen(true);
     });
   }
+  function goBack() {
+    navigate('/virtual-machines');
+  }
   return (
     <>
       <Box sx={containerStyle}>
+      <VMActionButton
+       onClick={goBack}
+        label="Go back"
+        icon={ArrowBackIcon}
+      />
         <VMActionButton 
           label="Edit" 
           onClick={handleClickOpenEditDialog}
@@ -108,6 +120,8 @@ export default function VMActions() {
           color="primary"
           icon={TerminalIcon}
         />
+      {/* </Box>
+      <Box sx={containerStyle}> */}
         <VMActionButton 
           label="Power On" 
           onClick={startVM} 

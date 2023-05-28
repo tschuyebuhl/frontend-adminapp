@@ -20,9 +20,7 @@ export function VirtualMachineDetails() {
   let navigate = useNavigate();
   const results = useQuery(['name', name], getVirtualMachine);
 
-  function handleClick() {
-    navigate('/virtual-machines');
-  }
+
 
   if (results.isLoading) {
     <Loading />
@@ -32,12 +30,8 @@ export function VirtualMachineDetails() {
       <Typography variant="h4" textAlign="center">
       {name}
       </Typography>
-      <Button onClick={handleClick} variant="outlined">
-        <ArrowBackIcon />
-        Go back
-      </Button>
-      <VMInfo />
       <VMActions />
+      <VMInfo />
     </Box>
   );
 }

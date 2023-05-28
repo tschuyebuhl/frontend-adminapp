@@ -42,7 +42,7 @@ export default function InsetDividers() {
             <BeachAccessIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary="Running application healthchecks failed" secondary="1 April 2023" />
+        <ListItemText primary="Healthchecks failed" secondary="1 April 2023" />
       </ListItem>
     </List>
   );
