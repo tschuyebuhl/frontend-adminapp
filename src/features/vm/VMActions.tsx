@@ -16,6 +16,7 @@ import { VMEditDialog } from "./VMEditDialog";
 import { VMDeleteDialog } from "./VMDeleteDialog";
 import { VMActionButton } from "./VMActionButton";
 import { AlertSnackbar } from "./AlertSnackbar";
+import { VMCloneDialog } from "./VMCloneDialog";
 
 
 export default function VMActions() { 
@@ -41,6 +42,7 @@ export default function VMActions() {
   const [successOpen, setSuccessOpen] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openCloneDialog, setOpenCloneDialog] = useState(false);
 
   function handleClickOpenEditDialog() {
     setOpenEditDialog(true);
@@ -49,6 +51,11 @@ export default function VMActions() {
   function handleClickOpenDeleteDialog() {
     setOpenDeleteDialog(true);
   }
+
+  function handleClickOpenCloneDialog() {
+    setOpenCloneDialog(true);
+  }
+
   function restartVM() {
     setRestartLoading(true);
     let res = startVirtualMachine(name ? name : '');
@@ -112,7 +119,8 @@ export default function VMActions() {
           icon={BuildIcon}
         />
         <VMActionButton 
-          label="Clone " 
+          label="Clone"
+          onClick={handleClickOpenCloneDialog} 
           icon={FileCopyIcon}
         />
         <VMActionButton 
@@ -153,6 +161,9 @@ export default function VMActions() {
       <VMEditDialog 
         setOpenEditDialog={setOpenEditDialog}
         openEditDialog={openEditDialog}/>
+        <VMCloneDialog
+        setOpenCloneDialog={setOpenCloneDialog}
+        openCloneDialog={openCloneDialog} />
       <AlertSnackbar
         open={errorOpen}
         handleClose={() => setErrorOpen(false)}

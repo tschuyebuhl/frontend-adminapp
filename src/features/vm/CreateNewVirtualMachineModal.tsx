@@ -90,7 +90,6 @@ const CreateNewVirtualMachineModal = ({
   }, [open, values]);
 
   const handleSubmit = async () => {
-    console.log("handleSubmit called"); 
     setLoading(true);
     await onSubmit(values);
     setLoading(false);

@@ -18,6 +18,14 @@ export interface CreateVirtualMachineRequest {
   host: string;
   folder: string;
 }
+
+export interface CloneVirtualMachineRequest {
+  name: string;
+  datastore: string;
+  host: string;
+  folder: string;
+}
+
 export interface powerResponse {
   message: string;
   status: number;
@@ -83,6 +91,25 @@ export async function restartVirtualMachine(vmName: string): Promise<powerRespon
 }
 
 export const createVirtualMachine = async (newVmData: CreateVirtualMachineRequest): Promise<VirtualMachine> => {
+  const options = {
+    method: 'POST',
+    url: '/api/v1/virtual-machines',
+    headers: {
+        'content-type': 'application/json',
+    },
+    data: JSON.stringify(newVmData),
+};
+const response = await api.request(options)
+
+  if (response.status != 201) {
+    throw new Error(`Failed to create a new virtual machine: ${response.statusText}`);
+  }
+
+  const createdVm = response.data();
+  return createdVm;
+};
+
+export const cloneVirtualMachine = async (newVmData: CreateVirtualMachineRequest): Promise<VirtualMachine> => {
   const options = {
     method: 'POST',
     url: '/api/v1/virtual-machines',

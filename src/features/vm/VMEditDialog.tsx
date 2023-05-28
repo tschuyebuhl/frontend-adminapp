@@ -60,10 +60,6 @@ const { mutate } = useMutation(
 );
 
 
-function handleClickOpenEditDialog() {
-  setOpenEditDialog(true);
-}
-
 function handleCloseEditDialog() {
   setOpenEditDialog(false);
 }

@@ -5,6 +5,7 @@ import { Folder, fetchFolders } from './Folder';
 export const useFetchHostsAndFolders = (open: boolean) => {
   const [hosts, setHosts] = useState<Host[]>([]);
   const [folders, setFolders] = useState<Folder[]>([]);
+  const [datastores, setDatastores] = useState<Folder[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
