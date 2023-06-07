@@ -60,9 +60,11 @@ async function handleClone() {
   
   const cloneRequest: CloneVirtualMachineRequest = {
     name: targetName,
-    datastore: targetDatastore,
-    host: targetHost,
-    folder: targetFolder,
+    placement: {
+      datastore: targetDatastore,
+      host: targetHost,
+      folder: targetFolder,
+    }
   };
 
   try {
@@ -101,7 +103,7 @@ function handleCloseCloneDialog() {
         onChange={handleHostChange}
       >
         {hosts.map((host) => (
-          <MenuItem key={host.ID} value={host.ID}>
+          <MenuItem key={host.VsphereID} value={host.VsphereID}>
             {host.Name}
           </MenuItem>
         ))}
@@ -114,7 +116,7 @@ function handleCloseCloneDialog() {
         onChange={handleFolderChange}
       >
         {folders.map((folder) => (
-          <MenuItem key={folder.ID} value={folder.ID}>
+          <MenuItem key={folder.VsphereID} value={folder.VsphereID}>
             {folder.Name}
           </MenuItem>
         ))}
@@ -127,7 +129,7 @@ function handleCloseCloneDialog() {
         onChange={handleDatastoreChange}
       >
         {datastores.map((datastore) => (
-          <MenuItem key={datastore.ID} value={datastore.ID}>
+          <MenuItem key={datastore.VsphereID} value={datastore.VsphereID}>
             {datastore.Name}
           </MenuItem>
         ))}

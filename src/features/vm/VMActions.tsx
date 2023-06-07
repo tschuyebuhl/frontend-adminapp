@@ -1,6 +1,6 @@
 import { Alert, Box, Button, CircularProgress, Snackbar } from "@mui/material";
 import { useState } from "react";
-import { CloneVirtualMachineRequest, getVirtualMachine, startVirtualMachine, stopVirtualMachine } from "./VirtualMachine";
+import { CloneVirtualMachineRequest, cloneVirtualMachine, getVirtualMachine, startVirtualMachine, stopVirtualMachine } from "./VirtualMachine";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import EditIcon from '@mui/icons-material/Edit';
@@ -57,9 +57,7 @@ export default function VMActions() {
   }
   
   function handleCloneSubmit(values: CloneVirtualMachineRequest): Promise<void> {
-    // Handle the submission logic here, e.g., make API calls or perform other operations
-    
-    // Return a Promise that resolves when the submission is complete
+    cloneVirtualMachine(name ?? 'null', values )
     return Promise.resolve();
   }
   function restartVM() {
