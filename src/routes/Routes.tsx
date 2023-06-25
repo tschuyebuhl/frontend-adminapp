@@ -6,6 +6,7 @@ import ErrorPage from '../pages/ErrorPage';
 import {CreateProject} from "../features/project/CreateProject";
 import ProjectList from "../features/project/ProjectList";
 import { IPAM } from '../features/ipam/IPAM';
+import VMConsole from '../features/vm/VMConsole';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
   {
     path: 'ipam',
     element: <IPAM />
+  },
+  {
+    path: '/virtual-machines/:name/console',
+    element: <VMConsole />,
   }
 ]);
 

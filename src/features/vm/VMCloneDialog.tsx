@@ -21,7 +21,7 @@ import { useDatastores } from './useDatastores';
 interface VMCloneDialogProps {
   openCloneDialog: boolean;
   setOpenCloneDialog: (open: boolean) => void;
-  onSubmit: (values: CloneVirtualMachineRequest) => Promise<void>;
+  onSubmit: (values: CloneVirtualMachineRequest) => void;
 }
 
 

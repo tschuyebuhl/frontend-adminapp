@@ -26,6 +26,7 @@ export const ChipList: React.FC<ChipListProps> = ({ chipData }) => (
 
       <Chip avatar={<Avatar src="/nginx.png"/>} label={'nginx'} />
       <Chip avatar={<Avatar src="/apache.png"/>} label={'Apache HTTP Server'} />
+      <Chip avatar={<Avatar src="/apache.png"/>} label={'Aurea BPM'} />
       <Chip avatar={<Avatar src="/docker.png"/>} label={'Docker'} />
       <Chip avatar={<Avatar src="/postgres.png"/>} label={'PostgreSQL'} />
       <Chip avatar={<Avatar src="/zabbix.png"/>} label={'Zabbix'} />

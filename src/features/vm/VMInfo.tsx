@@ -15,6 +15,7 @@ const testVm = {
   NumCpus: 2,
   Project: 'M4B',
   Network: '172 - Common',
+  Environment: 'Staging',
   IP: '10.16.72.201',
   Disk: '100 GB',
   PowerState: 'true',
@@ -48,6 +49,9 @@ return (
 
     <VMCard title="Project">
       <Typography>{testVm.Project}</Typography>
+      <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>Environment</Typography>
+      <Typography>{testVm.Environment}</Typography>
+      <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>Software</Typography>
       <ChipList chipData={chipData} />
     </VMCard>
     <VMCard title="Incidents">

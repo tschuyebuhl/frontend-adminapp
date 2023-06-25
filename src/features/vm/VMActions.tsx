@@ -1,6 +1,6 @@
 import { Alert, Box, Button, CircularProgress, Snackbar } from "@mui/material";
 import { useState } from "react";
-import { CloneVirtualMachineRequest, cloneVirtualMachine, getVirtualMachine, startVirtualMachine, stopVirtualMachine } from "./VirtualMachine";
+import { CloneVirtualMachineRequest, cloneVirtualMachine, getVirtualMachine, startVirtualMachine, stopVirtualMachine, VirtualMachineResponse } from "./VirtualMachine";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import EditIcon from '@mui/icons-material/Edit';
@@ -55,10 +55,21 @@ export default function VMActions() {
   function handleClickOpenCloneDialog() {
     setOpenCloneDialog(true);
   }
+  function handleClickConsole() {
+    navigate('console');
+  }
   
-  function handleCloneSubmit(values: CloneVirtualMachineRequest): Promise<void> {
-    cloneVirtualMachine(name ?? 'null', values )
-    return Promise.resolve();
+  function handleCloneSubmit(values: CloneVirtualMachineRequest) {
+    let res = cloneVirtualMachine(name ?? 'null', values )
+    res.then((v) => {
+      if (v.status === 200) {
+        setRestartLoading(false);
+        setSuccessOpen(true);
+      }
+    }).catch((e) => {
+      setRestartLoading(false);
+      setErrorOpen(true);
+    });
   }
   function restartVM() {
     setRestartLoading(true);
@@ -130,6 +141,7 @@ export default function VMActions() {
         <VMActionButton 
           label="Console" 
           color="primary"
+          onClick={handleClickConsole}
           icon={TerminalIcon}
         />
       {/* </Box>
