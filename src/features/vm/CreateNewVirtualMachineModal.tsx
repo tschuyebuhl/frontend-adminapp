@@ -161,6 +161,20 @@ const CreateNewVirtualMachineModal = ({
                     ))}
                   </Select>
                 </FormControl>
+              ) : column.accessorKey === 'dns_servers' ? (
+                <TextField
+                  key={column.accessorKey}
+                  label={column.header}
+                  name={column.accessorKey}
+                  helperText={errors[column.accessorKey]}
+                  error={Boolean(errors[column.accessorKey])}
+                  onChange={(e) => {
+                    setValues({
+                      ...values,
+                      [e.target.name]: e.target.value.split(',').map(item => item.trim()),
+                    });
+                  }}
+                />
               ) : (
                 <TextField
                   key={column.accessorKey}

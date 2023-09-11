@@ -1,34 +1,36 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { getProjects, Project } from './Project';
 import MaterialReactTable from 'material-react-table';
-import type { MRT_ColumnDef } from 'material-react-table';
 import { useNavigate } from 'react-router-dom';
+import  { columns }  from './ProjectColumns';
+import { CreateNewProjectModal, CreateProjectRequest } from './CreateNewProjectModal';
+
 
 import { Box, Button, Typography } from '@mui/material';
 
-export function ProjectList() {
-  const columns = useMemo<MRT_ColumnDef<Project>[]>(
-    () => [
-      {
-        accessorKey: 'name',
-        header: 'Project Name',
-        muiTableHeadCellProps: { sx: { color: 'green' } }, //custom props
-      },
-      {
-        accessorKey: 'code',
-        header: 'Code',
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-      },
-    ],
-    [],
-  );
 
+export function ProjectList() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+
+  const handleCreateModalClose = () => {
+    setCreateModalOpen(false);
+  };
+
+  const handleCreateModalOpen = () => {
+    setCreateModalOpen(true);
+  };
+
+  const handleCreateNewProject = async (values: CreateProjectRequest) => {
+    // Implement your project creation logic here
+    // For example: await createProject(values);
+    setCreateModalOpen(false);
+    // Refresh your project list, for example, by re-fetching projects.
+  };
 
   useEffect(() => {
     async function fetchProjects() {
@@ -53,6 +55,10 @@ export function ProjectList() {
         Projects
       </Typography>
       <MaterialReactTable
+        renderTopToolbarCustomActions={() => (
+          <Button color="secondary" onClick={handleCreateModalOpen} variant="contained">
+            Create a New Project
+          </Button>)}
         columns={columns}
         enableColumnResizing={false}
         muiTablePaginationProps={{
@@ -68,7 +74,7 @@ export function ProjectList() {
         }}
         displayColumnDefOptions={{
           'mrt-row-actions': {
-            header: 'Project Details', //change header text
+            header: 'Details',
             size: 15,
           },
         }}
@@ -79,6 +85,11 @@ export function ProjectList() {
             Details
           </Button>,
         ]}
+      />
+      <CreateNewProjectModal
+        open={createModalOpen}
+        onClose={handleCreateModalClose}
+        onSubmit={handleCreateNewProject}
       />
     </Box>
   );
