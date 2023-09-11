@@ -7,6 +7,7 @@ import {CreateProject} from "../features/project/CreateProject";
 import ProjectList from "../features/project/ProjectList";
 import { IPAM } from '../features/ipam/IPAM';
 import VMConsole from '../features/vm/VMConsole';
+import ProjectDetails from '../features/project/ProjectDetails';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: 'projects',
     element: <ProjectList />
+  },
+  {
+    path: 'projects/:name',
+    element: <ProjectDetails />
   },
   {
     path: 'ipam',

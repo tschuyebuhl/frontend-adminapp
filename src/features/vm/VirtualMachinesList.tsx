@@ -1,48 +1,42 @@
-import React, { useState, useMemo } from 'react';
-import { getVirtualMachines, VirtualMachine, createVirtualMachine, CreateVirtualMachineRequest } from './VirtualMachine';
+import React, { useState, useEffect } from 'react';
+import { getVirtualMachines, CreateVirtualMachineRequest, createVirtualMachine } from './VirtualMachine';
 import MaterialReactTable from 'material-react-table';
-import { useNavigate } from 'react-router-dom';
-import { useKeycloak } from '@react-keycloak/web';
-import CreateNewVirtualMachineModal from "./CreateNewVirtualMachineModal";
-import { MRT_ColumnDef } from 'material-react-table';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import {columns, vmColumns} from './ModalColumns';
+import { vmColumns } from './ModalColumns';
 
 import {
   Box,
   Button,
   Typography,
 } from '@mui/material';
-import { Loading } from '../../components/Loading';
-
-let strictMode = false;
+import CreateNewVirtualMachineModal from "./CreateNewVirtualMachineModal";
+import { columns } from './ModalColumns';
 
 export function VirtualMachinesList() {
-  const { keycloak } = useKeycloak();
   const [createModalOpen, setCreateModalOpen] = useState(false);
-
-
+  const [limit, setLimit] = useState(20);
+  const [offset, setOffset] = useState(0);
   const navigate = useNavigate();
-  const {
-    data: virtualMachines,
-    isLoading: loading,
-  } = useQuery(['virtualMachines'], getVirtualMachines);
 
-  function handleClick(name: string) {
-    navigate('/virtual-machines/' + name);
-  }
+  const virtualMachinesQuery = useQuery(
+    ['virtualMachines', { offset, limit }],
+    () => getVirtualMachines({ offset, limit }),
+    { refetchOnWindowFocus: false }
+  );
 
-  const handleCreateNewRow = async (values: CreateVirtualMachineRequest) => {
-    try {
-      const createdVm = await createVirtualMachine(values);
-      // setVirtualMachines((prevVms) => [...prevVms, createdVm]);
-      handleCreateModalClose();
-    } catch (error) {
-      console.error("Error creating a new virtual machine:", error);
-    }
-    getVirtualMachines();
-  };
+  const { data: virtualMachines, refetch } = virtualMachinesQuery;
+
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 5,
+  });
+
+  useEffect(() => {
+    setOffset(pagination.pageIndex * pagination.pageSize);
+    setLimit(pagination.pageSize);
+    refetch();
+  }, [pagination.pageIndex, pagination.pageSize]);
 
   const handleCreateModalClose = () => {
     setCreateModalOpen(false);
@@ -52,9 +46,20 @@ export function VirtualMachinesList() {
     setCreateModalOpen(true);
   };
 
-  if (loading) {
-    <Loading />
+  const handleCreateNewRow = async (values: CreateVirtualMachineRequest) => {
+    try {
+      await createVirtualMachine(values);
+      handleCreateModalClose();
+      refetch(); 
+    } catch (error) {
+      console.error("Error creating a new virtual machine:", error);
+    }
+  };
+
+  function handleClick(name: string) {
+    navigate('/virtual-machines/' + name);
   }
+
 
   return (
     <Box sx={{ p: 2 }}>
@@ -67,9 +72,13 @@ export function VirtualMachinesList() {
         </Typography>
         <MaterialReactTable
           columns={columns}
-          data={virtualMachines? virtualMachines : []}
+          data={virtualMachines?.VMs? virtualMachines.VMs : []}
+          manualPagination
           enableColumnResizing={false}
           enableRowActions={true}
+          onPaginationChange={setPagination} 
+          state={{ pagination }} 
+          rowCount={virtualMachines? virtualMachines.Count : 0}
           positionActionsColumn="last"
           displayColumnDefOptions={{
             'mrt-row-actions': {

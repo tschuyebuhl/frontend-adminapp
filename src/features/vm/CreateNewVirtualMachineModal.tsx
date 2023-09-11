@@ -64,12 +64,25 @@ const CreateNewVirtualMachineModal = ({
   onClose,
   onSubmit,
 }: CreateModalProps) => {
-  const [values, setValues] = useState<CreateVirtualMachineRequest>(() => //maybe can use partial here?
-  columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
-      return acc;
-    }, {} as any)
-  );
+  // Initialize values based on columns
+  const initialValues: CreateVirtualMachineRequest = {
+    name: '',
+    ip: '',
+    host: '',
+    folder: '',
+    prefix: 0, // or another default
+    dns_servers: [], // or another default
+    gateways: [], // or another default
+    domain: '', // or another default
+    timezone: '', // or another default
+    template_id: '', // or another default
+    provider: '', // or another default
+    ssh_keys: [], // or another default
+  };
+  
+  const [values, setValues] = useState<CreateVirtualMachineRequest>(initialValues);
+  
+
   const [errors, setErrors] = useState<{ [key in keyof CreateVirtualMachineRequest]?: string }>({});
 
   const { hosts, folders } = useFetchHostsAndFolders(open);
@@ -155,7 +168,13 @@ const CreateNewVirtualMachineModal = ({
                   name={column.accessorKey}
                   helperText={errors[column.accessorKey ? column.accessorKey : 'name']}
                   error={Boolean(errors[column.accessorKey ? column.accessorKey : 'name'])}
-                  onChange={(e) => setValues({ ...values, [e.target.name]: e.target.value })}
+                  onChange={(e) => {
+                    let value: string | number = e.target.value;
+                    if (column.accessorKey === 'prefix') {
+                      value = Number(value);
+                    }
+                    setValues({ ...values, [e.target.name]: value });
+                  }}
                 />
               )
             ))}

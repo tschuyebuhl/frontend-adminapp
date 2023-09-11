@@ -1,5 +1,5 @@
 import React from 'react';
-import XTermComponent from './Console'; // update with the actual path
+import XTermComponent from './Console'; 
 
 const VMConsole: React.FC = () => {
   return (

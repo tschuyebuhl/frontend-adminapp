@@ -23,12 +23,7 @@ export async function getProjects(): Promise<Project[]> {
   }));
 }
 
-
-export async function getProject({
-                                   queryKey,
-                                 }: {
-  queryKey: QueryKey;
-}): Promise<Project> {
+export async function getProject({queryKey, }: {queryKey: QueryKey;}): Promise<Project> {
   const id = queryKey[1];
   const response = await api.get(`/api/v1/projects/${id}`);
   if (response.status !== 200) {

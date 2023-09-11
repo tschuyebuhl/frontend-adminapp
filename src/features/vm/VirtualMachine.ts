@@ -13,7 +13,7 @@ export interface VirtualMachine {
   CustomerName: string;
 }
 
-export interface VirtualMachineResponse { 
+export interface VirtualMachineResponse {
   vm: VirtualMachine;
   status: number;
 }
@@ -23,6 +23,14 @@ export interface CreateVirtualMachineRequest {
   ip: string;
   host: string;
   folder: string;
+  dns_servers: string[];
+  gateways: string[];
+  provider: string;
+  domain: string;
+  timezone: string;
+  template_id: string;
+  prefix: number;
+  ssh_keys: string[];
 }
 
 export interface CloneVirtualMachineRequest {
@@ -39,12 +47,22 @@ export interface powerResponse {
   message: string;
   status: number;
 }
-
-
-export async function getVirtualMachines(): Promise<VirtualMachine[]> {
-  const response = await api.get('/api/v1/virtual-machines/');
-  return response.data;
+export interface Pagination {
+  offset: number;
+  limit: number;
 }
+
+
+export async function getVirtualMachines(params: { offset: number; limit: number }): Promise<{ VMs: VirtualMachine[], Count: number }> {
+  const response = await api.get('/api/v1/virtual-machines', {
+    params,
+  });
+  return {
+    VMs: response.data.VMs,
+    Count: response.data.Count,
+  };
+}
+
 
 export async function getVirtualMachine({
   queryKey,
@@ -73,9 +91,9 @@ export async function stopVirtualMachine(vmName: string): Promise<powerResponse>
   const response = await api.post(`/api/v1/virtual-machines/${vmName}/power/stop`);
   if (response.status !== 200) {
     throw new Error(`${vmName} exception during stop`);
-    return { message: response.data, status: response.status};
+    return { message: response.data, status: response.status };
   }
-  return { message: response.data, status: response.status};
+  return { message: response.data, status: response.status };
 }
 
 export async function startVirtualMachine(vmName: string): Promise<powerResponse> {
@@ -83,9 +101,9 @@ export async function startVirtualMachine(vmName: string): Promise<powerResponse
   const response = await api.post(`/api/v1/virtual-machines/${vmName}/power/start`);
   if (response.status !== 200) {
     throw new Error(`${vmName} exception during start`);
-    return { message: response.data, status: response.status};
+    return { message: response.data, status: response.status };
   }
-  return { message: response.data, status: response.status};
+  return { message: response.data, status: response.status };
 }
 
 
@@ -94,27 +112,27 @@ export async function restartVirtualMachine(vmName: string): Promise<powerRespon
   const response = await api.post(`/api/v1/virtual-machines/${vmName}/power/restart`);
   if (response.status !== 200) {
     throw new Error(`${vmName} exception during start`);
-    return { message: response.data, status: response.status};
+    return { message: response.data, status: response.status };
   }
-  return { message: response.data, status: response.status};
+  return { message: response.data, status: response.status };
 }
 
-export const cloneVirtualMachine = async (vmName:string, newVmData: CloneVirtualMachineRequest): Promise<VirtualMachineResponse> => {
+export const cloneVirtualMachine = async (vmName: string, newVmData: CloneVirtualMachineRequest): Promise<VirtualMachineResponse> => {
   const options = {
     method: 'POST',
     url: `/api/v1/virtual-machines/${vmName}/clone`,
     headers: {
-        'content-type': 'application/json',
+      'content-type': 'application/json',
     },
     data: JSON.stringify(newVmData),
-};
-const response = await api.request(options)
+  };
+  const response = await api.request(options)
 
   if (response.status != 201) {
     throw new Error(`Failed to create a new virtual machine: ${response.statusText}`);
   }
 
-  return { vm: response.data, status: response.status};
+  return { vm: response.data, status: response.status };
 };
 
 export const createVirtualMachine = async (newVmData: CreateVirtualMachineRequest): Promise<VirtualMachine> => {
@@ -122,11 +140,12 @@ export const createVirtualMachine = async (newVmData: CreateVirtualMachineReques
     method: 'POST',
     url: '/api/v1/virtual-machines',
     headers: {
-        'content-type': 'application/json',
+      'content-type': 'application/json',
     },
     data: JSON.stringify(newVmData),
-};
-const response = await api.request(options)
+  };
+
+  const response = await api.request(options);
 
   if (response.status != 201) {
     throw new Error(`Failed to create a new virtual machine: ${response.statusText}`);
