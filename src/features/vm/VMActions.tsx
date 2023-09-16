@@ -15,7 +15,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { VMEditDialog } from "./VMEditDialog";
 import { VMDeleteDialog } from "./VMDeleteDialog";
 import { VMActionButton } from "./VMActionButton";
-import { AlertSnackbar } from "./AlertSnackbar";
+import { AlertSnackbar } from "../../components/AlertSnackbar";
 import { VMCloneDialog } from "./VMCloneDialog";
 
 

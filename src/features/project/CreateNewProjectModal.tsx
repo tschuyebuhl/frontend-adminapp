@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Switch, TextField } from '@mui/material';
 
 interface CreateNewProjectModalProps {
   open: boolean;
@@ -29,13 +29,39 @@ export const CreateNewProjectModal: React.FC<CreateNewProjectModalProps> = ({ op
     onClose();
   };
 
+  const handleInputChange = (key: keyof CreateProjectRequest, value: string | boolean) => {
+    setValues({ ...values, [key]: value });
+  };
+
+  const inputFields = Object.keys(values).map((key) => {
+    const label = key.charAt(0).toUpperCase() + key.slice(1);
+    if (typeof values[key as keyof CreateProjectRequest] === 'boolean') {
+      return (
+        <div key={key}>
+          <label>{label}</label>
+          <Switch
+            checked={values[key as keyof CreateProjectRequest] as boolean}
+            onChange={(e) => handleInputChange(key as keyof CreateProjectRequest, e.target.checked)}
+          />
+        </div>
+      );
+    }
+    return (
+      <TextField
+        key={key}
+        label={label}
+        fullWidth
+        value={values[key as keyof CreateProjectRequest]}
+        onChange={(e) => handleInputChange(key as keyof CreateProjectRequest, e.target.value)}
+      />
+    );
+  });
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Create New Project</DialogTitle>
       <DialogContent>
-        {/* Add your form fields here */}
-        <TextField label="Code" fullWidth value={values.code} onChange={(e) => setValues({ ...values, code: e.target.value })} />
-        {/* Add other fields similarly */}
+        {inputFields}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">Cancel</Button>

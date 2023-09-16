@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getVirtualMachine } from "./VirtualMachine";
 import { VMCard } from "./VMCard";
-import { ChipList } from "./ChipList";
+import { ChipList } from "../../components/ChipList";
 import { useParams } from "react-router-dom";
 import InsetDividers from "../../components/InsetDivider";
 
