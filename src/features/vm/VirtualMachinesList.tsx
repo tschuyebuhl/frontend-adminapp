@@ -3,7 +3,7 @@ import { getVirtualMachines, CreateVirtualMachineRequest, createVirtualMachine }
 import MaterialReactTable from 'material-react-table';
 import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { vmColumns } from './ModalColumns';
+import { vmColumns, columns } from './ModalColumns';
 
 import {
   Box,
@@ -11,7 +11,6 @@ import {
   Typography,
 } from '@mui/material';
 import CreateNewVirtualMachineModal from "./CreateNewVirtualMachineModal";
-import { columns } from './ModalColumns';
 
 export function VirtualMachinesList() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -112,6 +111,7 @@ export function VirtualMachinesList() {
           onClose={handleCreateModalClose}
           onSubmit={handleCreateNewRow}
           columns={vmColumns}
+          onCompletion={refetch}
         />
       </Box>
   );

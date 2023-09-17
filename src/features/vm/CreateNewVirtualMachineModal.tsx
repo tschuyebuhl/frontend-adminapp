@@ -25,6 +25,7 @@ type CreateModalProps = {
   onClose: () => void;
   onSubmit: (values: CreateVirtualMachineRequest) => Promise<void>;
   columns: MRT_ColumnDef<CreateVirtualMachineRequest>[];
+  onCompletion: () => void;
 };
 const isValidIP = (ip: string) => {
   const regex = new RegExp(
@@ -63,6 +64,7 @@ const CreateNewVirtualMachineModal = ({
   columns,
   onClose,
   onSubmit,
+  onCompletion,
 }: CreateModalProps) => {
   // Initialize values based on columns
   const initialValues: CreateVirtualMachineRequest = {
@@ -81,10 +83,7 @@ const CreateNewVirtualMachineModal = ({
   };
   
   const [values, setValues] = useState<CreateVirtualMachineRequest>(initialValues);
-  
-
   const [errors, setErrors] = useState<{ [key in keyof CreateVirtualMachineRequest]?: string }>({});
-
   const { hosts, folders } = useFetchHostsAndFolders(open);
 
 
@@ -104,10 +103,15 @@ const CreateNewVirtualMachineModal = ({
 
   const handleSubmit = async () => {
     setLoading(true);
-    await onSubmit(values);
-    setLoading(false);
-    onClose();
-    getVirtualMachines();
+    try {
+      await onSubmit(values);
+      onCompletion(); 
+    } catch (error) {
+      console.error("There was an issue:", error);
+    } finally {
+      setLoading(false);
+      onClose();
+    }
   };
 
   const [loading, setLoading] = useState(false);

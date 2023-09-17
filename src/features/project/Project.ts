@@ -14,7 +14,16 @@ export interface CreateProjectRequest {
   description: string;
   active: boolean;
   name: string;
-  scm_provider: string;
+  scmProvider: string;
+}
+
+export interface UpdateProjectRequest {
+  id: string;
+  code: string;
+  description: string;
+  active: boolean;
+  name: string;
+  scmProvider: string;
 }
 
 export interface ProjectResponse {
@@ -57,9 +66,13 @@ export async function getProject({ queryKey, }: { queryKey: QueryKey; }): Promis
   };
 }
 export async function createProject(data: CreateProjectRequest): Promise<void> {
-  await api.post('/api/v1/projects/', data);
+  await api.post('/api/v1/projects', data);
 }
 
 export async function deleteProject(code: string): Promise<void> {
   await api.delete(`/api/v1/projects/${code}`);
+}
+
+export async function updateProject(code: string, data: CreateProjectRequest): Promise<void> {
+  await api.put(`/api/v1/projects/${code}`, data);
 }

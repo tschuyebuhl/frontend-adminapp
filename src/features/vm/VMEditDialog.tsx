@@ -20,7 +20,7 @@ setOpenEditDialog: (open: boolean) => void;
 export function VMEditDialog({openEditDialog, setOpenEditDialog}: VMEditDialogProps) { //maybe better than just "props"?
 
 const { name } = useParams<string>();
-//let name = "test20";
+
 let navigate = useNavigate();
 
 
@@ -50,9 +50,6 @@ const { mutate } = useMutation(
       }),
     }),
   {
-    onSuccess: () => {
-      navigate('/virtual-machines');
-    },
     onError: (error) => {
       console.error(error);
     },

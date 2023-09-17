@@ -3,7 +3,9 @@ import { getProjects, Project, createProject } from './Project';
 import MaterialReactTable from 'material-react-table';
 import { useNavigate } from 'react-router-dom';
 import  { columns }  from './ProjectColumns';
-import { CreateNewProjectModal, CreateProjectRequest } from './CreateNewProjectModal';
+import { CreateNewProjectModal } from './CreateNewProjectModal';
+import { CreateProjectRequest } from './Project';
+
 import { AlertSnackbar } from '../../components/AlertSnackbar';
 
 import { Box, Button, Typography, CircularProgress } from '@mui/material';
@@ -83,8 +85,8 @@ export function ProjectList() {
         data={projects}
         muiTableProps={{
           sx: {
-            tableLayout: 'auto', // Use 'auto' to let content determine the column widths
-            width: '100%', // Ensure table takes full width of its parent
+            tableLayout: 'auto',
+            width: '100%', 
           },
         }}
         displayColumnDefOptions={{

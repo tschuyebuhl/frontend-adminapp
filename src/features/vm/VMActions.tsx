@@ -176,7 +176,8 @@ export default function VMActions() {
         openDeleteDialog={openDeleteDialog}/>
       <VMEditDialog 
         setOpenEditDialog={setOpenEditDialog}
-        openEditDialog={openEditDialog}/>
+        openEditDialog={openEditDialog}
+        />
         <VMCloneDialog
         setOpenCloneDialog={setOpenCloneDialog}
         openCloneDialog={openCloneDialog}
