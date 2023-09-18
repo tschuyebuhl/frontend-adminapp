@@ -1,5 +1,6 @@
 import { Snackbar, Alert } from "@mui/material";
 import { AlertSnackbarProps } from "./AlertSnackbarProps";
+import React from "react";
 
 export const AlertSnackbar: React.FC<AlertSnackbarProps> = ({
   open,

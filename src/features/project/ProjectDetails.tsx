@@ -113,11 +113,11 @@ export function ProjectDetails() {
         <Button color="primary" onClick={handleDeleteConfirmOpen}>Delete</Button>
       </CardActions>
 
-      {/* Confirmation Dialog */}
       <Dialog
         open={deleteConfirmOpen}
         onClose={handleDeleteConfirmClose}
       >
+        //TODO component
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText>
