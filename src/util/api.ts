@@ -2,6 +2,10 @@ import axios from 'axios';
 import keycloak from './keycloak';
 import { useVCenterContext } from '../features/vcenter/vCenterContext';
 
+export interface Pagination {
+  limit: number;
+  offset: number;
+}
 //const { selectedVCenter } = useVCenterContext();
 const api = axios.create({
   // Add any global configuration for axios here, like baseURL

@@ -7,7 +7,7 @@ import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 import { Link } from 'react-router-dom';
 
-export const mainListItems = (
+export const SidebarItems = (
   <React.Fragment>
     <ListItemButton component={Link} to="/ipam/subnets">
       <ListItemIcon>
@@ -29,5 +29,3 @@ export const mainListItems = (
     </ListItemButton>
   </React.Fragment>
 );
-
-

@@ -12,9 +12,9 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import VCenterSelector from "../features/vcenter/VCenterSelector";
+import VCenterSelector from '../features/vcenter/VCenterSelector';
 
-const pages = ['Tickets', 'Virtual Machines', 'Projects', 'IPAM', 'Playbooks'];
+const pages = ['Virtual Machines', 'Projects', 'IPAM', 'Playbooks'];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 export const slugify = (...args: string[]): string => {
@@ -51,12 +51,12 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth={false}>
         <Toolbar disableGutters>
-            { /* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */ }
-            <Avatar src='/resized.png' sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
+          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
+          <Avatar src="/resized.png" sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
             href="/"
             sx={{
               mr: 2,
@@ -113,7 +113,7 @@ function ResponsiveAppBar() {
                 key={page}
                 onClick={handleCloseNavMenu}
                 href={'/' + slugify(page)}
-                sx={{ my: 1.20, color: 'white', display: 'block' }}
+                sx={{ my: 1.2, color: 'white', display: 'block' }}
               >
                 {page}
               </Button>

@@ -1,0 +1,53 @@
+import MaterialReactTable from 'material-react-table';
+import { Box, Typography, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { networkColumns } from './NetworkColumns';
+import { Network } from './Network';
+
+interface NetworksListProps {
+  networks: Network[];
+  pagination: { pageIndex: number; pageSize: number };
+  setPagination: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
+}
+
+export function NetworksList({ networks, pagination, setPagination }: NetworksListProps) {
+  return (
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h4" textAlign="center" sx={{ mb: 1 }}>
+        Networks
+      </Typography>
+      <MaterialReactTable
+        columns={networkColumns}
+        data={networks}
+        manualPagination
+        enableColumnResizing={false}
+        enableRowActions={true}
+        onPaginationChange={setPagination}
+        state={{ pagination }}
+        rowCount={networks.length}
+        positionActionsColumn="last"
+        displayColumnDefOptions={{
+          'mrt-row-actions': {
+            header: 'Network Details',
+            size: 15,
+          },
+        }}
+        renderRowActions={({ row }) => [
+          <Button variant="outlined" component={Link} to={`/ipam/${row.original.name}`}>
+            Details
+          </Button>,
+        ]}
+        muiTablePaginationProps={{
+          rowsPerPageOptions: [5, 10, 25],
+          showFirstButton: true,
+          showLastButton: true,
+        }}
+        muiTableProps={{
+          sx: {
+            width: '100%',
+          },
+        }}
+      />
+    </Box>
+  );
+}
