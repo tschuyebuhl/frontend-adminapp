@@ -34,7 +34,8 @@ export function IPAM() {
   //Maybe a map of the network?
   return (
     <NetworksList
-      networks={networksQuery.data || []}
+      networks={networksQuery.data?.networks || []}
+      totalNetworks={networksQuery.data?.total || 0}
       pagination={pagination}
       setPagination={setPagination}
     />

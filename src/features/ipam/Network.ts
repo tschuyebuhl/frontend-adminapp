@@ -26,7 +26,7 @@ export interface CreateNetworkRequest {
   DHCPEnd: string
 }
 
-export interface NetworkResponse {
+export interface NetworkWebModel {
   ID: string
   Name: string
   VlanID: number
@@ -39,13 +39,21 @@ export interface NetworkResponse {
   PortGroupID: string
 }
 
-export async function getNetworks(pagination: Pagination): Promise<Network[]> {
-  const response = await api.get('/api/v1/ipam', { params: pagination });
-  if (!Array.isArray(response.data)) {
-    // Handle unexpected data shape by defaulting to an empty array
-    return [];
+export interface NetworkResponse {
+  networks: NetworkWebModel
+  total: number
+}
+
+export async function getNetworks(pagination: Pagination): Promise<{ networks: Network[], total: number }> {
+  const response = await api.get('/api/v1/ipam/networks', { params: pagination });
+  const data = response.data;
+
+  if (!data.networks || !Array.isArray(data.networks)) {
+    // Handle unexpected data shape by defaulting to an empty array and zero total
+    return { networks: [], total: 0 };
   }
-  return response.data.map((network: NetworkResponse) => ({
+
+  const mappedNetworks = data.networks.map((network: NetworkWebModel) => ({
     id: network.ID,
     name: network.Name,
     vlanId: network.VlanID,
@@ -55,15 +63,18 @@ export async function getNetworks(pagination: Pagination): Promise<Network[]> {
     dhcpEnabled: network.DHCPEnabled,
     dhcpStart: network.DHCPStart,
     dhcpEnd: network.DHCPEnd,
-    portGroupId: network.PortGroupID,
+    portGroupId: network.PortGroupID
   }));
+
+  return { networks: mappedNetworks, total: data.total };
 }
 
 
 export async function getProject({ queryKey }: { queryKey: QueryKey; }): Promise<Network> {
   const code = queryKey[1];
   const response = await api.get(`/api/v1/ipam/${code}`);
-  const network: NetworkResponse = response.data;
+  const network: NetworkWebModel = response.data;
+
   return {
     id: network.ID,
     name: network.Name,
@@ -77,6 +88,7 @@ export async function getProject({ queryKey }: { queryKey: QueryKey; }): Promise
     portGroupId: network.PortGroupID,
   };
 }
+
 export async function createProject(data: CreateNetworkRequest): Promise<void> {
   await api.post('/api/v1/ipam', data);
 }

@@ -8,9 +8,15 @@ interface NetworksListProps {
   networks: Network[];
   pagination: { pageIndex: number; pageSize: number };
   setPagination: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
+  totalNetworks?: number;
 }
 
-export function NetworksList({ networks, pagination, setPagination }: NetworksListProps) {
+export function NetworksList({
+  networks,
+  pagination,
+  setPagination,
+  totalNetworks,
+}: NetworksListProps) {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h4" textAlign="center" sx={{ mb: 1 }}>
@@ -24,7 +30,7 @@ export function NetworksList({ networks, pagination, setPagination }: NetworksLi
         enableRowActions={true}
         onPaginationChange={setPagination}
         state={{ pagination }}
-        rowCount={networks.length}
+        rowCount={totalNetworks}
         positionActionsColumn="last"
         displayColumnDefOptions={{
           'mrt-row-actions': {
