@@ -3,11 +3,11 @@ import { VirtualMachinesList } from '../features/vm/VirtualMachinesList';
 import { VirtualMachineDetails } from '../features/vm/VirtualMachineDetails';
 import { TicketList } from '../features/ticket/TicketList';
 import ErrorPage from '../pages/ErrorPage';
-import {CreateProject} from "../features/project/CreateProject";
-import ProjectList from "../features/project/ProjectList";
+import ProjectList from '../features/project/ProjectList';
 import { IPAM } from '../features/ipam/IPAM';
 import VMConsole from '../features/vm/VMConsole';
 import ProjectDetails from '../features/project/ProjectDetails';
+import { NetworkDetails } from '../features/ipam/NetworkDetails';
 
 const router = createBrowserRouter([
   {
@@ -29,20 +29,30 @@ const router = createBrowserRouter([
   },
   {
     path: 'projects',
-    element: <ProjectList />
+    element: <ProjectList />,
   },
   {
     path: 'projects/:code',
-    element: <ProjectDetails />
+    element: <ProjectDetails />,
   },
   {
     path: 'ipam',
-    element: <IPAM />
+    element: <IPAM />,
+    /* children: [
+      {
+        path: ':name',
+        element: <NetworkDetails />,
+      },
+    ],*/
+  },
+  {
+    path: 'ipam/:name',
+    element: <NetworkDetails />,
   },
   {
     path: '/virtual-machines/:name/console',
     element: <VMConsole />,
-  }
+  },
 ]);
 
 export function Routes() {
