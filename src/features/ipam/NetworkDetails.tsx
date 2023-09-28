@@ -26,29 +26,43 @@ export const NetworkDetails: React.FC = () => {
   const network = useQuery(['name', name], getNetwork);
   const ips = useQuery(['code', name], getIPAddresses);
 
-  //2^(32-24)-2
   const totalIPs = network.data?.subnetMask ? Math.pow(2, 32 - network.data.subnetMask) - 2 : 0;
   const count = ips.data?.length ?? 0;
   const percentageTaken = Math.round((count / totalIPs) * 100);
 
   return (
-    <div>
+    <>
+      {modalOpen ? 'gowno' : 'elo'}
       {network.isLoading && <CircularProgress />}
       {network.data && (
-        <Card>
+        <Card
+          sx={{
+            //space it a little bit between left and right edges
+            margin: '0 10px',
+            //space it a little bit between top and bottom edges
+            mb: 2,
+            backgroundColor: 'rgba(0,0,0,0.1)',
+          }}
+        >
           <CardContent>
             <Typography variant="h5">{network.data.name}</Typography>
             <Typography>{network.data.address}</Typography>
             <Typography>{'Number of usable addresses: ' + totalIPs}</Typography>
-            <Typography>{ips.data?.length ?? 0}</Typography>
-            <Typography>{'Percentage taken: ' + percentageTaken + '%'}</Typography>
+            <Typography>{'Number of taken addresses: ' + ips.data?.length ?? 0}</Typography>
+
+            <Button
+              color="primary"
+              variant="contained"
+              style={{ marginTop: '20px' }}
+              onClick={() => setModalOpen(!modalOpen)}
+            >
+              Edit Network
+            </Button>
           </CardContent>
         </Card>
       )}
-
       <Typography style={{ margin: '20px 0' }}>Percentage of IP Addresses Taken:</Typography>
       <LinearProgress variant="determinate" value={percentageTaken} />
-
       {ips.data && (
         <Table>
           <TableHead>
@@ -69,20 +83,11 @@ export const NetworkDetails: React.FC = () => {
           </TableBody>
         </Table>
       )}
-
-      <Button
-        color="primary"
-        variant="contained"
-        style={{ marginTop: '20px' }}
-        onClick={() => navigate('/path/to/edit/network')}
-      >
-        Edit Network
-      </Button>
       <NetworkBoard
         network={network.data ?? ({} as Network)}
         ipAddresses={ips.data ?? []}
         totalIPs={totalIPs}
       />
-    </div>
+    </>
   );
 };
