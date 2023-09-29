@@ -27,15 +27,16 @@ export interface Network {
 }
 
 export interface CreateNetworkRequest {
-  ID?: string
-  Name: string
-  VlanID: number
-  SubnetMask: number
-  Gateway: string
-  Address: string
-  DHCPEnabled: boolean
-  DHCPStart: string
-  DHCPEnd: string
+  id: string
+  name: string
+  vlanId: number
+  subnetMask: number
+  gateway: string
+  address: string
+  dhcpEnabled: boolean
+  dhcpStart: string
+  dhcpEnd: string
+  portGroupId: string
 }
 
 export interface NetworkWebModel {

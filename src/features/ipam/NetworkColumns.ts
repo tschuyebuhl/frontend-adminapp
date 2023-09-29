@@ -3,6 +3,10 @@ import { Network } from "./Network";
 
 export const networkColumns: MRT_ColumnDef<Network>[] = [
   {
+    header: 'id',
+    accessorKey: 'id',
+  },
+  {
     header: 'Name',
     accessorKey: 'name',
   },
