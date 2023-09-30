@@ -46,30 +46,16 @@ const FormModal = <T extends Record<string, any>>({
   const [values, setValues] = useState<T>(initialValues);
   const [errors, setErrors] = useState<{ [key in keyof T]?: string }>({});
 
-  /*const { hosts, folders } = useFetchHostsAndFolders(open);
-
-
-  const fetchData = async () => {
-    const fetchedHosts = await fetchHosts();
-    const fetchedFolders = await fetchFolders();
-  };
-  */
-
-  const fetchData = async () => {
-    console.log('im so fetching right now');
-  };
-
   useEffect(() => {
     if (open) {
-      fetchData();
       const errors = validate(values);
       setErrors(errors);
     }
-  }, [open, values]);
+  }, [values]);
 
   useEffect(() => {
     if (open) {
-      fetchData();
+      //fetchData();
       setValues(initialValues);
       const errors = validate(values);
       setErrors(errors);
@@ -134,7 +120,7 @@ const FormModal = <T extends Record<string, any>>({
           variant="contained"
           disabled={loading || Object.keys(errors).length > 0}
         >
-          {loading ? <CircularProgress size={24} /> : 'Create'}
+          {loading ? <CircularProgress size={24} /> : 'Confirm'}
         </Button>
       </DialogActions>
     </Dialog>

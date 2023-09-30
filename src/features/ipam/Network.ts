@@ -124,10 +124,32 @@ export async function createNetwork(data: CreateNetworkRequest): Promise<void> {
   await api.post('/api/v1/ipam', data);
 }
 
-export async function deleteProject(code: string): Promise<void> {
+export async function deleteNetwork(code: string): Promise<void> {
   await api.delete(`/api/v1/ipam/${code}`);
 }
 
-export async function updateProject(code: string, data: CreateNetworkRequest): Promise<void> {
-  await api.put(`/api/v1/ipam/${code}`, data);
+export async function updateNetwork(code: string, data: CreateNetworkRequest): Promise<void> {
+  await api.put(`/api/v1/ipam/networks/${code}`, data);
 }
+
+export const validateForm = (values: CreateNetworkRequest) => {
+  const errors: { [key in keyof CreateNetworkRequest]?: string } = {};
+
+  if (!values.name) {
+    errors.name = 'Name is required';
+  }
+
+  if (!values.address) {
+    errors.address = 'Network address is required';
+  }
+
+  if (!values.subnetMask) {
+    errors.subnetMask = 'Subnet Mask is required';
+  }
+
+  if (!values.gateway) {
+    errors.gateway = 'Gateway is required';
+  }
+
+  return errors;
+};

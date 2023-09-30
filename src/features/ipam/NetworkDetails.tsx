@@ -15,11 +15,19 @@ import {
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getNetwork, getIPAddresses, Network, CreateNetworkRequest } from './Network';
+import {
+  getNetwork,
+  getIPAddresses,
+  Network,
+  CreateNetworkRequest,
+  validateForm,
+  updateNetwork,
+} from './Network';
 import { NetworkBoard } from './NetworkBoard';
 import EditNetworkModal from '../../components/FormModal';
 import { networkColumns } from './NetworkColumns';
 import FormModal from '../../components/FormModal';
+import { VOButton } from '../../components/VOButton';
 
 export const NetworkDetails: React.FC = () => {
   const { name } = useParams<string>();
@@ -31,9 +39,11 @@ export const NetworkDetails: React.FC = () => {
   const fetch = () => {
     getNetwork({ queryKey: ['name', name] });
   };
-  const handleCreateNewRow = async (values: CreateNetworkRequest) => {};
+  const handleCreateNewRow = async (values: CreateNetworkRequest) => {
+    await updateNetwork(name ?? 'undefined', values);
+    navigate('/ipam/' + values.name);
+  };
   const handleCreateModalClose = () => {
-    console.log(network.data);
     setModalOpen(false);
   };
 
@@ -41,26 +51,6 @@ export const NetworkDetails: React.FC = () => {
   const count = ips.data?.length ?? 0;
   const percentageTaken = Math.round((count / (totalIPs === 0 ? 1 : totalIPs)) * 100);
 
-  const validateForm = (values: CreateNetworkRequest) => {
-    const errors: { [key in keyof CreateNetworkRequest]?: string } = {};
-
-    if (!values.name) {
-      errors.name = 'Name is required';
-    }
-
-    if (!values.address) {
-      errors.address = 'Network address is required';
-    }
-    if (!values.subnetMask) {
-      errors.subnetMask = 'Subnet Mask is required';
-    }
-
-    if (!values.gateway) {
-      errors.gateway = 'Gateway is required';
-    }
-
-    return errors;
-  };
   return (
     <>
       {network.isLoading && <CircularProgress />}
@@ -118,6 +108,9 @@ export const NetworkDetails: React.FC = () => {
         ipAddresses={ips.data ?? []}
         totalIPs={totalIPs}
       />
+      {/* can use form modal here */}
+      <VOButton onClick={() => {}} title={'Add IP'} />
+
       <FormModal
         title={'Test'}
         open={modalOpen}
