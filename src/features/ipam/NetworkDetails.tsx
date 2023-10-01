@@ -34,14 +34,16 @@ import {
   Network,
   DeleteIPAddressRequest,
 } from './models';
+import { AlertSnackbar } from '../../components/AlertSnackbar';
 
 export const NetworkDetails: React.FC = () => {
   const { name } = useParams<string>();
   const navigate = useNavigate();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [addIpModalOpen, setAddIpModalOpen] = useState(false);
   const queryClient = useQueryClient();
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [addIpModalOpen, setAddIpModalOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const network = useQuery(['name', name], getNetwork);
   const ips = useQuery(['code', name], getIPAddresses);
 
@@ -98,10 +100,10 @@ export const NetworkDetails: React.FC = () => {
         >
           <CardContent>
             <Typography variant="h5">{network.data.name}</Typography>
-            <Typography>{network.data.address}</Typography>
+            <Typography>{'Network address: ' + network.data.address}</Typography>
+            <Typography>{'VLAN ID: ' + network.data.vlanId}</Typography>
             <Typography>{'Number of usable addresses: ' + totalIPs}</Typography>
             <Typography>{'Number of taken addresses: ' + count}</Typography>
-
             <Button
               color="primary"
               variant="contained"
@@ -111,10 +113,10 @@ export const NetworkDetails: React.FC = () => {
               Edit Network
             </Button>
           </CardContent>
+          <Typography style={{ margin: '20px 0' }}>Percentage of IP Addresses Taken:</Typography>
+          <LinearProgress variant="determinate" value={percentageTaken} />
         </Card>
       )}
-      <Typography style={{ margin: '20px 0' }}>Percentage of IP Addresses Taken:</Typography>
-      <LinearProgress variant="determinate" value={percentageTaken} />
       {ips.data && (
         <Table>
           <TableHead>
@@ -142,6 +144,7 @@ export const NetworkDetails: React.FC = () => {
                         network: ipAddress.NetworkID,
                       };
                       deleteIP(values);
+                      setSnackbarOpen(true);
                     }}
                   >
                     Delete
@@ -181,6 +184,12 @@ export const NetworkDetails: React.FC = () => {
         columns={networkFormColumns}
         initialValues={network.data ?? ({} as Network)}
         validate={validateForm}
+      />
+      <AlertSnackbar
+        open={snackbarOpen}
+        handleClose={() => setSnackbarOpen(false)}
+        severity="success"
+        message="Operation executed successfully."
       />
     </>
   );

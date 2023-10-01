@@ -58,6 +58,7 @@ export const networkFormColumns: FormColumn<Network>[] = [
   {
     header: 'VLAN ID',
     accessorKey: 'vlanId',
+    type: 'number',
   },
   {
     header: 'Subnet Mask',
