@@ -1,69 +1,6 @@
 import { QueryKey } from '@tanstack/react-query';
 import api, { Pagination } from '../../util/api';
-
-export interface IPAddress {
-  ID: string
-  IPAddress: string
-  PrefixLength: number
-  Hostname: string
-  Description: string
-  State: string
-  InterfaceID: any
-  NetworkID: string
-}
-
-export interface Network {
-  id: string
-  name: string
-  vlanId: number
-  subnetMask: number
-  gateway: string
-  address: string
-  dhcpEnabled: boolean
-  dhcpStart: string
-  dhcpEnd: string
-  portGroupId: string
-}
-
-export interface CreateNetworkRequest {
-  id: string
-  name: string
-  vlanId: number
-  subnetMask: number
-  gateway: string
-  address: string
-  dhcpEnabled: boolean
-  dhcpStart: string
-  dhcpEnd: string
-  portGroupId: string
-}
-
-export interface CreateIPAddressRequest {
-  ip: string
-  prefix: number
-  state: string
-  hostname: string
-  description: string
-  network: string
-}
-
-export interface NetworkWebModel {
-  ID: string
-  Name: string
-  VlanID: number
-  SubnetMask: number
-  Gateway: string
-  Address: string
-  DHCPEnabled: boolean
-  DHCPStart: string
-  DHCPEnd: string
-  PortGroupID: string
-}
-
-export interface NetworkResponse {
-  networks: NetworkWebModel
-  total: number
-}
+import { Network, NetworkWebModel, IPAddress, CreateNetworkRequest, CreateIPAddressRequest, DeleteIPAddressRequest } from './models';
 
 export async function getNetworks(pagination: Pagination): Promise<{ networks: Network[], total: number }> {
   const response = await api.get('/api/v1/ipam/networks', { params: pagination });
@@ -134,6 +71,10 @@ export async function createNetwork(data: CreateNetworkRequest): Promise<void> {
 
 export async function createIPAddress(code: string, data: CreateIPAddressRequest): Promise<void> {
   await api.post(`/api/v1/ipam/networks/${code}/ip-addresses`, data);
+}
+
+export async function deleteIPAddress(data: DeleteIPAddressRequest): Promise<void> {
+  await api.delete(`/api/v1/ipam/ip-addresses`, { data });
 }
 
 export async function deleteNetwork(code: string): Promise<void> {

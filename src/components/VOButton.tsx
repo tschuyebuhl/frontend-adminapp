@@ -4,7 +4,7 @@ import { MouseEventHandler } from 'react';
 type VOButtonProps = {
   title: string;
   //onClick: MouseEventHandler<HTMLButtonElement>;
-  onClick: () => void;
+  onClick: (...param: any) => void;
 };
 
 export const VOButton: React.FC<VOButtonProps> = ({ title, onClick }: VOButtonProps) => {

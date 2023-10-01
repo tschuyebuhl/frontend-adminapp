@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -11,57 +11,77 @@ import {
   TableHead,
   TableRow,
   Button,
-  Tab,
 } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   getNetwork,
   getIPAddresses,
-  Network,
-  CreateNetworkRequest,
   validateForm,
   updateNetwork,
-  IPAddress,
-  CreateIPAddressRequest,
   createIPAddress,
   validateIP,
+  deleteIPAddress,
 } from './Network';
 import { NetworkBoard } from './NetworkBoard';
 import { ipColumns, networkColumns, networkFormColumns } from './Columns';
 import FormModal from '../../components/FormModal';
 import { VOButton } from '../../components/VOButton';
+import {
+  CreateNetworkRequest,
+  CreateIPAddressRequest,
+  IPAddress,
+  Network,
+  DeleteIPAddressRequest,
+} from './models';
 
 export const NetworkDetails: React.FC = () => {
   const { name } = useParams<string>();
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [addIpModalOpen, setAddIpModalOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const network = useQuery(['name', name], getNetwork);
   const ips = useQuery(['code', name], getIPAddresses);
-  const fetch = () => {
-    getNetwork({ queryKey: ['name', name] });
-  };
+
+  useEffect(() => {
+    return () => {
+      queryClient.invalidateQueries(['name', name]);
+      queryClient.invalidateQueries(['code', name]);
+    };
+  }, [queryClient, name]);
+
   const handleCreateNewRow = async (values: CreateNetworkRequest) => {
     await updateNetwork(name ?? 'undefined', values);
     navigate('/ipam/' + values.name);
+    queryClient.invalidateQueries(['name', name]);
   };
+
   const handleCreateModalClose = () => {
     setModalOpen(false);
   };
+
   const closeIpModal = () => {
     setAddIpModalOpen(false);
   };
+
   const openIpModal = () => {
     setAddIpModalOpen(true);
   };
 
   const createNewIP = async (values: CreateIPAddressRequest) => {
     await createIPAddress(name ?? 'undefined', values);
+    queryClient.invalidateQueries(['code', name]);
+  };
+
+  const deleteIP = async (values: DeleteIPAddressRequest) => {
+    await deleteIPAddress(values);
+    queryClient.invalidateQueries(['code', name]);
   };
 
   const totalIPs = network.data?.subnetMask ? Math.pow(2, 32 - network.data.subnetMask) - 2 : 0;
+
   const count = ips.data?.length ?? 0;
   const percentageTaken = Math.round((count / (totalIPs === 0 ? 1 : totalIPs)) * 100);
 
@@ -71,9 +91,7 @@ export const NetworkDetails: React.FC = () => {
       {network.data && (
         <Card
           sx={{
-            //space it a little bit between left and right edges
             margin: '0 10px',
-            //space it a little bit between top and bottom edges
             mb: 2,
             backgroundColor: 'rgba(0,0,0,0.1)',
           }}
@@ -82,7 +100,7 @@ export const NetworkDetails: React.FC = () => {
             <Typography variant="h5">{network.data.name}</Typography>
             <Typography>{network.data.address}</Typography>
             <Typography>{'Number of usable addresses: ' + totalIPs}</Typography>
-            <Typography>{'Number of taken addresses: ' + ips.data?.length ?? 0}</Typography>
+            <Typography>{'Number of taken addresses: ' + count}</Typography>
 
             <Button
               color="primary"
@@ -104,6 +122,7 @@ export const NetworkDetails: React.FC = () => {
               <TableCell>IP Address</TableCell>
               <TableCell>Description</TableCell>
               <TableCell>Hostname</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -112,6 +131,22 @@ export const NetworkDetails: React.FC = () => {
                 <TableCell>{ipAddress.IPAddress + '/' + ipAddress.PrefixLength}</TableCell>
                 <TableCell>{ipAddress.Description}</TableCell>
                 <TableCell>{ipAddress.Hostname}</TableCell>
+                <TableCell>
+                  <Button
+                    title={'Delete'}
+                    variant="contained"
+                    color="error"
+                    onClick={() => {
+                      const values: DeleteIPAddressRequest = {
+                        id: ipAddress.ID,
+                        network: ipAddress.NetworkID,
+                      };
+                      deleteIP(values);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -122,7 +157,6 @@ export const NetworkDetails: React.FC = () => {
         ipAddresses={ips.data ?? []}
         totalIPs={totalIPs}
       />
-      {/* can use form modal here */}
       <VOButton onClick={openIpModal} title={'Add IP'} />
       <FormModal
         title={'Add IP'}
@@ -137,10 +171,8 @@ export const NetworkDetails: React.FC = () => {
             prefix: network.data?.subnetMask,
           } as CreateIPAddressRequest
         }
-        onCompletion={fetch}
         validate={validateIP}
       />
-
       <FormModal
         title={'Test'}
         open={modalOpen}
@@ -148,7 +180,6 @@ export const NetworkDetails: React.FC = () => {
         onSubmit={handleCreateNewRow}
         columns={networkFormColumns}
         initialValues={network.data ?? ({} as Network)}
-        onCompletion={fetch}
         validate={validateForm}
       />
     </>

@@ -1,5 +1,5 @@
 import { MRT_ColumnDef } from "material-react-table";
-import { CreateIPAddressRequest, IPAddress, Network } from "./Network";
+import { CreateIPAddressRequest, IPAddress, Network } from "./models";
 import { FormColumn } from "../../types/FormColumn";
 
 export const networkColumns: MRT_ColumnDef<Network>[] = [

@@ -21,7 +21,7 @@ type FormModalProps<T extends Record<string, any>> = {
   onClose: () => void;
   onSubmit: (values: T) => Promise<void>;
   columns: FormColumn<T>[];
-  onCompletion: () => void;
+  onCompletion?: () => void;
   initialValues: T;
   validate: (values: T) => { [key in keyof T]?: string };
 };
@@ -66,7 +66,9 @@ const FormModal = <T extends Record<string, any>>({
     setLoading(true);
     try {
       await onSubmit(values);
-      onCompletion();
+      if (onCompletion) {
+        onCompletion();
+      }
     } catch (error) {
       console.error('There was an issue:', error);
     } finally {
