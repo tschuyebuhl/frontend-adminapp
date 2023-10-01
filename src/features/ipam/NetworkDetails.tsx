@@ -1,3 +1,4 @@
+import { IPTable } from './IPTable';
 import React, { useState, useEffect } from 'react';
 import {
   Card,
@@ -118,42 +119,7 @@ export const NetworkDetails: React.FC = () => {
         </Card>
       )}
       {ips.data && (
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>IP Address</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Hostname</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {ips.data.map((ipAddress) => (
-              <TableRow key={ipAddress.ID}>
-                <TableCell>{ipAddress.IPAddress + '/' + ipAddress.PrefixLength}</TableCell>
-                <TableCell>{ipAddress.Description}</TableCell>
-                <TableCell>{ipAddress.Hostname}</TableCell>
-                <TableCell>
-                  <Button
-                    title={'Delete'}
-                    variant="contained"
-                    color="error"
-                    onClick={() => {
-                      const values: DeleteIPAddressRequest = {
-                        id: ipAddress.ID,
-                        network: ipAddress.NetworkID,
-                      };
-                      deleteIP(values);
-                      setSnackbarOpen(true);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <IPTable data={ips.data} deleteIP={deleteIP} setSnackbarOpen={setSnackbarOpen} />
       )}
       <NetworkBoard
         network={network.data ?? ({} as Network)}
