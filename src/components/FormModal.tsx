@@ -13,14 +13,14 @@ import {
   MenuItem,
   Select,
 } from '@mui/material';
-import { MRT_ColumnDef } from 'material-react-table';
+import { FormColumn } from '../types/FormColumn';
 
 type FormModalProps<T extends Record<string, any>> = {
   title: string;
   open: boolean;
   onClose: () => void;
   onSubmit: (values: T) => Promise<void>;
-  columns: MRT_ColumnDef<T>[];
+  columns: FormColumn<T>[];
   onCompletion: () => void;
   initialValues: T;
   validate: (values: T) => { [key in keyof T]?: string };
@@ -95,13 +95,16 @@ const FormModal = <T extends Record<string, any>>({
             {columns.map((column) => (
               <TextField
                 key={String(column.accessorKey)}
-                label={column.header}
+                label={column.label}
                 name={column.accessorKey as string}
-                value={values[column.accessorKey as keyof T] || ''} // <-- Add this line
-                helperText={errors[column.accessorKey as keyof T]}
-                error={Boolean(errors[column.accessorKey as keyof T])}
+                value={values[column.accessorKey] || ''}
+                helperText={errors[column.accessorKey]}
+                error={Boolean(errors[column.accessorKey])}
                 onChange={(e) => {
                   let value: string | number = e.target.value;
+                  if (column.type === 'number') {
+                    value = Number(value);
+                  }
                   setValues({ ...values, [e.target.name]: value });
                 }}
               />

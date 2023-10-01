@@ -12,7 +12,6 @@ export interface IPAddress {
   NetworkID: string
 }
 
-
 export interface Network {
   id: string
   name: string
@@ -37,6 +36,15 @@ export interface CreateNetworkRequest {
   dhcpStart: string
   dhcpEnd: string
   portGroupId: string
+}
+
+export interface CreateIPAddressRequest {
+  ip: string
+  prefix: number
+  state: string
+  hostname: string
+  description: string
+  network: string
 }
 
 export interface NetworkWebModel {
@@ -121,11 +129,15 @@ export async function trashFunction(name: string): Promise<IPAddress[]> {
 
 
 export async function createNetwork(data: CreateNetworkRequest): Promise<void> {
-  await api.post('/api/v1/ipam', data);
+  await api.post('/api/v1/ipam/networks', data);
+}
+
+export async function createIPAddress(code: string, data: CreateIPAddressRequest): Promise<void> {
+  await api.post(`/api/v1/ipam/networks/${code}/ip-addresses`, data);
 }
 
 export async function deleteNetwork(code: string): Promise<void> {
-  await api.delete(`/api/v1/ipam/${code}`);
+  await api.delete(`/api/v1/ipam/networks/${code}`);
 }
 
 export async function updateNetwork(code: string, data: CreateNetworkRequest): Promise<void> {
@@ -151,5 +163,14 @@ export const validateForm = (values: CreateNetworkRequest) => {
     errors.gateway = 'Gateway is required';
   }
 
+  return errors;
+};
+
+export const validateIP = (values: CreateIPAddressRequest) => {
+  const errors: { [key in keyof CreateIPAddressRequest]?: string } = {};
+
+  if (!values.ip) {
+    errors.ip = 'IP is required';
+  }
   return errors;
 };

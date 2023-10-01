@@ -1,7 +1,9 @@
 import { Button } from '@mui/material';
+import { MouseEventHandler } from 'react';
 
 type VOButtonProps = {
   title: string;
+  //onClick: MouseEventHandler<HTMLButtonElement>;
   onClick: () => void;
 };
 

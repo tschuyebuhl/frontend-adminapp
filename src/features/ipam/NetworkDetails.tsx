@@ -22,10 +22,13 @@ import {
   CreateNetworkRequest,
   validateForm,
   updateNetwork,
+  IPAddress,
+  CreateIPAddressRequest,
+  createIPAddress,
+  validateIP,
 } from './Network';
 import { NetworkBoard } from './NetworkBoard';
-import EditNetworkModal from '../../components/FormModal';
-import { networkColumns } from './NetworkColumns';
+import { ipColumns, networkColumns, networkFormColumns } from './Columns';
 import FormModal from '../../components/FormModal';
 import { VOButton } from '../../components/VOButton';
 
@@ -33,6 +36,7 @@ export const NetworkDetails: React.FC = () => {
   const { name } = useParams<string>();
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const [addIpModalOpen, setAddIpModalOpen] = useState(false);
 
   const network = useQuery(['name', name], getNetwork);
   const ips = useQuery(['code', name], getIPAddresses);
@@ -45,6 +49,16 @@ export const NetworkDetails: React.FC = () => {
   };
   const handleCreateModalClose = () => {
     setModalOpen(false);
+  };
+  const closeIpModal = () => {
+    setAddIpModalOpen(false);
+  };
+  const openIpModal = () => {
+    setAddIpModalOpen(true);
+  };
+
+  const createNewIP = async (values: CreateIPAddressRequest) => {
+    await createIPAddress(name ?? 'undefined', values);
   };
 
   const totalIPs = network.data?.subnetMask ? Math.pow(2, 32 - network.data.subnetMask) - 2 : 0;
@@ -109,14 +123,30 @@ export const NetworkDetails: React.FC = () => {
         totalIPs={totalIPs}
       />
       {/* can use form modal here */}
-      <VOButton onClick={() => {}} title={'Add IP'} />
+      <VOButton onClick={openIpModal} title={'Add IP'} />
+      <FormModal
+        title={'Add IP'}
+        open={addIpModalOpen}
+        onClose={closeIpModal}
+        onSubmit={createNewIP}
+        columns={ipColumns}
+        initialValues={
+          {
+            ip: network.data?.address,
+            network: network.data?.id,
+            prefix: network.data?.subnetMask,
+          } as CreateIPAddressRequest
+        }
+        onCompletion={fetch}
+        validate={validateIP}
+      />
 
       <FormModal
         title={'Test'}
         open={modalOpen}
         onClose={handleCreateModalClose}
         onSubmit={handleCreateNewRow}
-        columns={networkColumns}
+        columns={networkFormColumns}
         initialValues={network.data ?? ({} as Network)}
         onCompletion={fetch}
         validate={validateForm}
