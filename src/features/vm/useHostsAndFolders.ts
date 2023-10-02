@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Host, fetchHosts } from './Host';
-import { Folder, fetchFolders } from './Folder';
+import { Host, fetchHosts } from '../../models/Host';
+import { Folder, fetchFolders } from '../../models/Folder';
 
 export const useFetchHostsAndFolders = (open: boolean) => {
   const [hosts, setHosts] = useState<Host[]>([]);

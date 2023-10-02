@@ -8,6 +8,7 @@ import { IPAM } from '../features/ipam/IPAM';
 import VMConsole from '../features/vm/VMConsole';
 import ProjectDetails from '../features/project/ProjectDetails';
 import { NetworkDetails } from '../features/ipam/NetworkDetails';
+import { Settings } from '../features/settings/Settings';
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
   {
     path: '/virtual-machines/:name/console',
     element: <VMConsole />,
+  },
+  {
+    path: '/settings',
+    element: <Settings />,
   },
 ]);
 

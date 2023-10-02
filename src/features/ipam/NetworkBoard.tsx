@@ -1,5 +1,5 @@
-import { Box, Divider, Grid, Paper, Tooltip, Typography } from '@mui/material';
-import { IPAddress, Network, ipToNumber } from './Network';
+import { Box, Card, Divider, Grid, Paper, Tooltip, Typography } from '@mui/material';
+import { IPAddress, Network } from './models';
 
 //TODO this wont work above /24
 export const NetworkBoard: React.FC<{
@@ -8,10 +8,10 @@ export const NetworkBoard: React.FC<{
   network: Network;
 }> = ({ network, ipAddresses, totalIPs }) => {
   return (
-    <>
+    <Card sx={{}}>
       <Typography marginTop={5}>Visual subnet display</Typography>
       <Divider />
-      <Grid marginTop={2} container spacing={1.11}>
+      <Grid marginTop={2} marginBottom={2} container spacing={1.11}>
         {Array.from({ length: totalIPs }).map((_, index) => {
           const ipNumber = index + 1; // start from .1
 
@@ -35,6 +35,6 @@ export const NetworkBoard: React.FC<{
           );
         })}
       </Grid>
-    </>
+    </Card>
   );
 };

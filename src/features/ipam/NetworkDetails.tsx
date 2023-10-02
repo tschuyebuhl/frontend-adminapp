@@ -1,18 +1,6 @@
 import { IPTable } from './IPTable';
 import React, { useState, useEffect } from 'react';
-import {
-  Card,
-  CardContent,
-  CircularProgress,
-  LinearProgress,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Button,
-} from '@mui/material';
+import { Card, CardContent, CircularProgress, Typography, Button } from '@mui/material';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -31,11 +19,11 @@ import { VOButton } from '../../components/VOButton';
 import {
   CreateNetworkRequest,
   CreateIPAddressRequest,
-  IPAddress,
   Network,
   DeleteIPAddressRequest,
 } from './models';
 import { AlertSnackbar } from '../../components/AlertSnackbar';
+import { LinearProgressWithLabel } from '../../components/LinearProgressWithLabel';
 
 export const NetworkDetails: React.FC = () => {
   const { name } = useParams<string>();
@@ -113,9 +101,10 @@ export const NetworkDetails: React.FC = () => {
             >
               Edit Network
             </Button>
+            <VOButton onClick={openIpModal} title={'Add IP'} />
           </CardContent>
           <Typography style={{ margin: '20px 0' }}>Percentage of IP Addresses Taken:</Typography>
-          <LinearProgress variant="determinate" value={percentageTaken} />
+          <LinearProgressWithLabel variant="determinate" value={percentageTaken} />
         </Card>
       )}
       {ips.data && (
@@ -126,7 +115,6 @@ export const NetworkDetails: React.FC = () => {
         ipAddresses={ips.data ?? []}
         totalIPs={totalIPs}
       />
-      <VOButton onClick={openIpModal} title={'Add IP'} />
       <FormModal
         title={'Add IP'}
         open={addIpModalOpen}

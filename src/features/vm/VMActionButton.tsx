@@ -1,5 +1,5 @@
 import { Button, CircularProgress } from "@mui/material";
-import { VMActionButtonProps } from "./VMActionButtonProps";
+import { VMActionButtonProps } from "../../models/VMActionButtonProps";
 
 const buttonStyle = {
   width: '190px',

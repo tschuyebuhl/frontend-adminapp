@@ -10,9 +10,9 @@ type VOButtonProps = {
 export const VOButton: React.FC<VOButtonProps> = ({ title, onClick }: VOButtonProps) => {
   return (
     <Button
-      variant="contained"
       color="primary"
-      size="large"
+      variant="contained"
+      style={{ marginTop: '20px' }}
       onClick={onClick}
       sx={{
         //space it a little bit between left and right edges

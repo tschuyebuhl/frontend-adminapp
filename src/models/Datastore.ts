@@ -1,4 +1,4 @@
-import api from '../../util/api'
+import api from '../util/api'
 export interface Datastore {
     ID: string
     Name: string

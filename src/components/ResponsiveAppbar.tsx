@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import VCenterSelector from '../features/vcenter/VCenterSelector';
 
-const pages = ['Virtual Machines', 'Projects', 'IPAM', 'Playbooks'];
+const pages = ['Virtual Machines', 'Projects', 'IPAM', 'Playbooks', 'Settings'];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 export const slugify = (...args: string[]): string => {
