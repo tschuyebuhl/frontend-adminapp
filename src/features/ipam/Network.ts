@@ -1,6 +1,6 @@
 import { QueryKey } from '@tanstack/react-query';
 import api, { Pagination } from '../../util/api';
-import { Network, NetworkWebModel, IPAddress, CreateNetworkRequest, CreateIPAddressRequest, DeleteIPAddressRequest } from './models';
+import { Network, NetworkWebModel, IPAddress, CreateNetworkRequest, CreateIPAddressRequest, DeleteIPAddressRequest, IPAddressResponse } from './models';
 
 export async function getNetworks(pagination: Pagination): Promise<{ networks: Network[], total: number }> {
   const response = await api.get('/api/v1/ipam/networks', { params: pagination });
@@ -55,8 +55,19 @@ export async function getIPAddresses({ queryKey }: { queryKey: QueryKey; }): Pro
   const name = queryKey[1];
   const response = await api.get(`/api/v1/ipam/networks/${name}/ip-addresses`);
   const data = response.data;
-  return data;
+
+  return data.map((item: IPAddressResponse) => ({
+    ID: item.ID,
+    IPAddress: item.ip_address,
+    PrefixLength: item.prefix_length,
+    Hostname: item.Hostname,
+    Description: item.Description,
+    State: item.State,
+    InterfaceID: item.InterfaceID,
+    NetworkID: item.NetworkID
+  }));
 }
+
 
 export async function trashFunction(name: string): Promise<IPAddress[]> {
   const response = await api.get(`/api/v1/ipam/networks/${name}/ip-addresses`);
@@ -110,8 +121,8 @@ export const validateForm = (values: CreateNetworkRequest) => {
 export const validateIP = (values: CreateIPAddressRequest) => {
   const errors: { [key in keyof CreateIPAddressRequest]?: string } = {};
 
-  if (!values.ip) {
-    errors.ip = 'IP is required';
+  if (!values.ip_address) {
+    errors.ip_address = 'IP is required';
   }
   return errors;
 };

@@ -123,9 +123,9 @@ export const NetworkDetails: React.FC = () => {
         columns={ipColumns}
         initialValues={
           {
-            ip: network.data?.address,
+            ip_address: network.data?.address,
             network: network.data?.id,
-            prefix: network.data?.subnetMask,
+            prefix_length: network.data?.subnetMask,
           } as CreateIPAddressRequest
         }
         validate={validateIP}

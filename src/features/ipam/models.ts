@@ -9,6 +9,17 @@ export interface IPAddress {
   NetworkID: string
 }
 
+export interface IPAddressResponse {
+  ID: string;
+  ip_address: string;
+  prefix_length: number;
+  State: string;
+  Hostname: string;
+  Description: string;
+  InterfaceID: null | string; // adjust as needed
+  NetworkID: string;
+}
+
 export interface Network {
   id: string
   name: string
@@ -36,8 +47,8 @@ export interface CreateNetworkRequest {
 }
 
 export interface CreateIPAddressRequest {
-  ip: string
-  prefix: number
+  ip_address: string
+  prefix_length: number
   state: string
   hostname: string
   description: string

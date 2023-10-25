@@ -14,7 +14,15 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import VCenterSelector from '../features/vcenter/VCenterSelector';
 
-const pages = ['Virtual Machines', 'Projects', 'IPAM', 'Playbooks', 'Settings'];
+const pages = [
+  'Virtual Machines',
+  'Projects',
+  'IPAM',
+  'Playbooks',
+  'Settings',
+  'Tickets',
+  'Templates',
+];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 export const slugify = (...args: string[]): string => {
@@ -68,7 +76,7 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            VirtuOps
+            Applet
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

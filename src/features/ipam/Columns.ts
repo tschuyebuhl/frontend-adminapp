@@ -95,13 +95,13 @@ export const ipColumns: FormColumn<CreateIPAddressRequest>[] = [
   {
     header: 'IP Address',
     label: 'IP Address',
-    accessorKey: 'ip',
+    accessorKey: 'ip_address',
     type: 'string',
   },
   {
     header: 'Prefix',
     label: 'Prefix',
-    accessorKey: 'prefix',
+    accessorKey: 'prefix_length',
     type: 'number',
   },
   {
