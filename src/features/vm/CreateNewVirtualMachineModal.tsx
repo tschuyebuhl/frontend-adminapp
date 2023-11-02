@@ -18,7 +18,10 @@ import { VirtualMachine, CreateVirtualMachineRequest, getVirtualMachines } from 
 import { Host, fetchHosts } from '../../models/Host';
 import { Folder, fetchFolders } from '../../models/Folder';
 import { vmColumns } from './ModalColumns';
-import { useFetchHostsAndFolders } from './useHostsAndFolders';
+import { useFolders } from './useFolders';
+import { useHosts } from './useHosts';
+import { useTemplates } from './useTemplates';
+import { useNetworks } from './useNetworks';
 
 type CreateModalProps = {
   open: boolean;
@@ -83,20 +86,10 @@ const CreateNewVirtualMachineModal = ({
 
   const [values, setValues] = useState<CreateVirtualMachineRequest>(initialValues);
   const [errors, setErrors] = useState<{ [key in keyof CreateVirtualMachineRequest]?: string }>({});
-  const { hosts, folders } = useFetchHostsAndFolders(open);
-
-  const fetchData = async () => {
-    const fetchedHosts = await fetchHosts();
-    const fetchedFolders = await fetchFolders();
-  };
-
-  useEffect(() => {
-    if (open) {
-      fetchData();
-      const errors = validateForm(values);
-      setErrors(errors);
-    }
-  }, [open, values]);
+  const hosts = useHosts(open);
+  const folders = useFolders(open);
+  const templates = useTemplates(open);
+  const networks = useNetworks(open);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -175,6 +168,22 @@ const CreateNewVirtualMachineModal = ({
                     });
                   }}
                 />
+              ) : column.accessorKey === 'template_id' ? (
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="template">Template</InputLabel>
+                  <Select
+                    label="Template"
+                    name={column.accessorKey}
+                    value={values[column.accessorKey] || ''}
+                    onChange={(e) => setValues({ ...values, [e.target.name]: e.target.value })}
+                  >
+                    {templates.map((template) => (
+                      <MenuItem key={template.ID} value={template.Name}>
+                        {template.Name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               ) : (
                 <TextField
                   key={column.accessorKey}

@@ -14,6 +14,7 @@ export const vmColumns: MRT_ColumnDef<CreateVirtualMachineRequest>[] = [
   {
     header: 'Host',
     accessorKey: 'host',
+
   },
   {
     header: 'Folder',
@@ -40,7 +41,7 @@ export const vmColumns: MRT_ColumnDef<CreateVirtualMachineRequest>[] = [
     accessorKey: 'timezone',
   },
   {
-    header: 'Template ID',
+    header: 'Template',
     accessorKey: 'template_id',
   },
   {

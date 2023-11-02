@@ -9,6 +9,7 @@ import VMConsole from '../features/vm/VMConsole';
 import ProjectDetails from '../features/project/ProjectDetails';
 import { NetworkDetails } from '../features/ipam/NetworkDetails';
 import { Settings } from '../features/settings/Settings';
+import { TemplateList } from '../features/templates/TemplateList';
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
   {
     path: '/settings',
     element: <Settings />,
+  },
+  {
+    path: '/templates',
+    element: <TemplateList />,
   },
 ]);
 

@@ -3,9 +3,8 @@ import { Host, fetchHosts } from '../../models/Host';
 import { Folder, fetchFolders } from '../../models/Folder';
 
 export const useFetchHostsAndFolders = (open: boolean) => {
-  const [hosts, setHosts] = useState<Host[]>([]);
+  const [templates, setTemplates] = useState<Template[]>([]);
   const [folders, setFolders] = useState<Folder[]>([]);
-  const [datastores, setDatastores] = useState<Folder[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
