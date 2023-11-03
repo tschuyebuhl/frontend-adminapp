@@ -22,6 +22,7 @@ import { useFolders } from './useFolders';
 import { useHosts } from './useHosts';
 import { useTemplates } from './useTemplates';
 import { useNetworks } from './useNetworks';
+import { FormField } from '../../components/FormField';
 
 type CreateModalProps = {
   open: boolean;
@@ -73,6 +74,7 @@ const CreateNewVirtualMachineModal = ({
     name: '',
     ip: '',
     host: '',
+    network_id: '',
     folder: '',
     prefix: 0,
     dns_servers: [],
@@ -90,8 +92,14 @@ const CreateNewVirtualMachineModal = ({
   const folders = useFolders(open);
   const templates = useTemplates(open);
   const networks = useNetworks(open);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleChange = (accessorKey: string, value: any) => {
+    setValues({ ...values, [accessorKey]: value });
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setLoading(true);
     try {
       await onSubmit(values);
@@ -104,7 +112,20 @@ const CreateNewVirtualMachineModal = ({
     }
   };
 
-  const [loading, setLoading] = useState(false);
+  const getItems = (accessorKey: string) => {
+    switch (accessorKey) {
+      case 'host':
+        return hosts;
+      case 'folder':
+        return folders;
+      case 'template_id':
+        return templates;
+      case 'network_id':
+        return networks;
+      default:
+        return [];
+    }
+  };
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -112,7 +133,7 @@ const CreateNewVirtualMachineModal = ({
         VM Properties
       </DialogTitle>
       <DialogContent>
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={handleSubmit}>
           <Stack
             sx={{
               width: '100%',
@@ -121,103 +142,19 @@ const CreateNewVirtualMachineModal = ({
               mt: '5px',
             }}
           >
-            {vmColumns.map((column) =>
-              column.accessorKey === 'host' ? (
-                <FormControl fullWidth>
-                  <InputLabel htmlFor="host">Host</InputLabel>
-                  <Select
-                    label="Host"
-                    name={column.accessorKey}
-                    value={values[column.accessorKey] || ''}
-                    onChange={(e) => setValues({ ...values, [e.target.name]: e.target.value })}
-                  >
-                    {hosts.map((host) => (
-                      <MenuItem key={host.ID} value={host.VsphereID}>
-                        {`${host.Name}`}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              ) : column.accessorKey === 'folder' ? (
-                <FormControl fullWidth>
-                  <InputLabel htmlFor="folder">Folder</InputLabel>
-                  <Select
-                    label="Folder"
-                    name={column.accessorKey}
-                    value={values[column.accessorKey] || ''}
-                    onChange={(e) => setValues({ ...values, [e.target.name]: e.target.value })}
-                  >
-                    {folders.map((folder) => (
-                      <MenuItem key={folder.ID} value={folder.VsphereID}>
-                        {folder.Name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              ) : column.accessorKey === 'dns_servers' ? (
-                <TextField
-                  key={column.accessorKey}
-                  label={column.header}
-                  name={column.accessorKey}
-                  helperText={errors[column.accessorKey]}
-                  error={Boolean(errors[column.accessorKey])}
-                  onChange={(e) => {
-                    setValues({
-                      ...values,
-                      [e.target.name]: e.target.value.split(',').map((item) => item.trim()),
-                    });
-                  }}
-                />
-              ) : column.accessorKey === 'template_id' ? (
-                <FormControl fullWidth>
-                  <InputLabel htmlFor="template">Template</InputLabel>
-                  <Select
-                    label="Template"
-                    name={column.accessorKey}
-                    value={values[column.accessorKey] || ''}
-                    onChange={(e) => setValues({ ...values, [e.target.name]: e.target.value })}
-                  >
-                    {templates.map((template) => (
-                      <MenuItem key={template.ID} value={template.Name}>
-                        {template.Name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              ) : (
-                <TextField
-                  key={column.accessorKey}
-                  label={column.header}
-                  name={column.accessorKey}
-                  helperText={errors[column.accessorKey ? column.accessorKey : 'name']}
-                  error={Boolean(errors[column.accessorKey ? column.accessorKey : 'name'])}
-                  onChange={(e) => {
-                    let value: string | number = e.target.value;
-                    if (column.accessorKey === 'prefix') {
-                      value = Number(value);
-                    }
-                    setValues({ ...values, [e.target.name]: value });
-                  }}
-                />
-              ),
-            )}
+            {vmColumns.map((column) => (
+              <FormField
+                key={column.accessorKey}
+                column={column}
+                value={values[column.accessorKey] || ''}
+                onChange={handleChange}
+                items={getItems(column.accessorKey)}
+                errors={errors}
+              />
+            ))}
           </Stack>
         </form>
       </DialogContent>
-
-      <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose} color="primary" variant="contained">
-          Cancel
-        </Button>
-        <Button
-          color="secondary"
-          onClick={handleSubmit}
-          variant="contained"
-          disabled={loading || Object.keys(errors).length > 0}
-        >
-          {loading ? <CircularProgress size={24} /> : 'Create'}
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };

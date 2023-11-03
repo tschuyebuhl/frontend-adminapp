@@ -20,6 +20,7 @@ export interface VirtualMachineResponse {
 
 export interface CreateVirtualMachineRequest {
   name: string;
+  network_id: string;
   ip: string;
   host: string;
   folder: string;
