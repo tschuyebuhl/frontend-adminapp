@@ -45,8 +45,8 @@ export const FormField: React.FC<FormFieldProps> = ({ column, value, onChange, i
             error={Boolean(errors?.[column.accessorKey])}
           >
             {items?.map((item) => (
-              <MenuItem key={item.ID} value={item.VsphereID || item.Name}>
-                {item.Name}
+              <MenuItem key={item.ID ?? item.id} value={item.Name ?? item.name}>
+                {item.Name ?? item.name}
               </MenuItem>
             ))}
           </Select>

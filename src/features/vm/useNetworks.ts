@@ -6,13 +6,13 @@ export const useNetworks = (open: boolean) => {
   const [networks, setNetworks] = useState<Network[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await getNetworks({ offset: 0, limit: 100 }); //TODO INFINITE SCROLL :D 
-      setNetworks(data.networks);
-    };
-
     if (open) {
-      fetchData();
+      getNetworks({ offset: 0, limit: 100 }).then(response => {
+        setNetworks(response.networks);
+      }).catch(error => {
+        console.error('Failed to fetch networks:', error);
+      });
+      console.log('useNetworks: ', networks[0])
     }
   }, [open]);
 

@@ -14,7 +14,6 @@ const api = axios.create({
 const selectedVCenter = 'vcenter'
 api.interceptors.request.use((config) => {
   if (keycloak.token) {
-    console.log('Adding Authorization header:', `Bearer ${keycloak.token}`);
     config.headers.Authorization = `Bearer ${keycloak.token}`;
   } else {
     console.log('Keycloak token not found');
