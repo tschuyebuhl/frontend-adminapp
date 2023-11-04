@@ -10,7 +10,6 @@ export async function getNetworks(pagination: Pagination): Promise<{ networks: N
     // Handle unexpected data shape by defaulting to an empty array and zero total
     return { networks: [], total: 0 };
   }
-
   const mappedNetworks = data.networks.map((network: NetworkWebModel) => ({
     id: network.ID,
     name: network.Name,
