@@ -39,12 +39,12 @@ export const vmColumns: ColumnDef<CreateVirtualMachineRequest>[] = [
   {
     header: 'DNS Servers',
     accessorKey: 'dns_servers',
-    type: 'select', //fetch out of network
+    type: 'text', //fetch out of network
   },
   {
     header: 'Gateways',
     accessorKey: 'gateways',
-    type: 'select', //fetch out of network
+    type: 'text', //fetch out of network
   },
   {
     header: 'Domain',

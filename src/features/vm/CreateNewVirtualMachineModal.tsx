@@ -23,6 +23,7 @@ import { useHosts } from './useHosts';
 import { useTemplates } from './useTemplates';
 import { useNetworks } from './useNetworks';
 import { FormField } from '../../components/FormField';
+import { Network } from '../ipam/models';
 
 type CreateModalProps = {
   open: boolean;
@@ -96,6 +97,9 @@ const CreateNewVirtualMachineModal = ({
 
   const handleChange = (accessorKey: string, value: any) => {
     setValues({ ...values, [accessorKey]: value });
+    if (accessorKey === 'network_id') {
+      const network: Network = value;
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -111,6 +115,8 @@ const CreateNewVirtualMachineModal = ({
       onClose();
     }
   };
+  //when you select a network, it should populate the prefix, dns servers, gateways, and domain
+  //when you select a template, it should populate the provider and ssh keys
 
   const getItems = (accessorKey: string) => {
     switch (accessorKey) {
@@ -118,10 +124,10 @@ const CreateNewVirtualMachineModal = ({
         return hosts;
       case 'folder':
         return folders;
-      case 'template_id':
-        return templates;
       case 'network_id':
         return networks;
+      case 'template_id':
+        return templates;
       default:
         return [];
     }

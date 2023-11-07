@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Host, fetchHosts } from '../../models/Host';
-import { Folder, fetchFolders } from '../../models/Folder';
 import { Template, getTemplates } from '../templates/Template';
+
 
 export const useTemplates = (open: boolean) => {
   const [templates, setTemplates] = useState<Template[]>([]);
