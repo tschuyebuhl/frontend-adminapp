@@ -25,6 +25,7 @@ import { useNetworks } from './useNetworks';
 import { FormField } from '../../components/FormField';
 import { IP, Network } from '../ipam/models';
 import { getNextIP, networkDetails } from '../ipam/Network';
+import { AlertSnackbar } from '../../components/AlertSnackbar';
 
 type CreateModalProps = {
   open: boolean;
@@ -50,7 +51,7 @@ const CreateNewVirtualMachineModal = ({
     folder: '',
     prefix: 0,
     dns_servers: [],
-    gateways: [],
+    gateway: '',
     domain: '',
     timezone: '',
     template_id: '',
@@ -60,6 +61,22 @@ const CreateNewVirtualMachineModal = ({
 
   const [values, setValues] = useState<CreateVirtualMachineRequest>(initialValues);
   const [errors, setErrors] = useState<{ [key in keyof CreateVirtualMachineRequest]?: string }>({});
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [snackbarMessage, setSnackbarMessage] = useState<string>('Success!');
+
+  const success = (message?: string): void => {
+    setSnackbarOpen(true);
+    setSnackbarSeverity('success');
+    setSnackbarMessage(message ?? 'Operation finished sucessfully.');
+  };
+
+  const error = (message?: string): void => {
+    setSnackbarOpen(true);
+    setSnackbarSeverity('error');
+    setSnackbarMessage(message ?? 'Operation failed. Please check server logs.');
+  };
+
   const hosts = useHosts(open);
   const folders = useFolders(open);
   const templates = useTemplates(open);
@@ -76,10 +93,13 @@ const CreateNewVirtualMachineModal = ({
         setValues((prevValues) => ({
           ...prevValues,
           ip: freeIP.address,
+          dns_servers: network.dns_servers,
+          gateway: network.gateway,
         }));
-        //setValues({ ...values, ip: freeIP.address });
-      } catch (error) {
-        console.error('An error occurred while fetching network details or IP', error);
+        success('Fetched IP Address successfully.');
+      } catch (fetchError) {
+        console.error('An error occurred while fetching network details or IP', fetchError);
+        error('test');
       }
     }
   };
@@ -143,6 +163,12 @@ const CreateNewVirtualMachineModal = ({
           </Stack>
         </form>
       </DialogContent>
+      <AlertSnackbar
+        open={snackbarOpen}
+        handleClose={() => setSnackbarOpen(false)}
+        severity={snackbarSeverity}
+        message={snackbarMessage}
+      />
     </Dialog>
   );
 };

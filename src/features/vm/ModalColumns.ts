@@ -42,8 +42,8 @@ export const vmColumns: ColumnDef<CreateVirtualMachineRequest>[] = [
     type: 'text', //fetch out of network
   },
   {
-    header: 'Gateways',
-    accessorKey: 'gateways',
+    header: 'Gateway',
+    accessorKey: 'gateway',
     type: 'text', //fetch out of network
   },
   {

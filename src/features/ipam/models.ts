@@ -41,6 +41,26 @@ export interface Network {
   dhcpStart: string
   dhcpEnd: string
   portGroupId: string
+  dnsServers: string[]
+}
+
+export interface NetworkResponse {
+  networks: NetworkWebModel
+  total: number
+}
+
+export interface NetworkWebModel {
+  ID: string
+  Name: string
+  VlanID: number
+  SubnetMask: number
+  Gateway: string
+  Address: string
+  DHCPEnabled: boolean
+  DHCPStart: string
+  DHCPEnd: string
+  PortGroupID: string
+  DNSServers: string[]
 }
 
 export interface CreateNetworkRequest {
@@ -65,23 +85,8 @@ export interface CreateIPAddressRequest {
   network: string
 }
 
-export interface NetworkWebModel {
-  ID: string
-  Name: string
-  VlanID: number
-  SubnetMask: number
-  Gateway: string
-  Address: string
-  DHCPEnabled: boolean
-  DHCPStart: string
-  DHCPEnd: string
-  PortGroupID: string
-}
 
-export interface NetworkResponse {
-  networks: NetworkWebModel
-  total: number
-}
+
 
 //these are UUID's. 
 export interface DeleteIPAddressRequest {

@@ -25,7 +25,7 @@ export interface CreateVirtualMachineRequest {
   host: string;
   folder: string;
   dns_servers: string[];
-  gateways: string[];
+  gateway: string;
   provider: string;
   domain: string;
   timezone: string;
