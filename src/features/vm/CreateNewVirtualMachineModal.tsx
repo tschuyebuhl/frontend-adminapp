@@ -93,7 +93,7 @@ const CreateNewVirtualMachineModal = ({
         setValues((prevValues) => ({
           ...prevValues,
           ip: freeIP.address,
-          dns_servers: network.dns_servers,
+          dns_servers: network.dnsServers,
           gateway: network.gateway,
         }));
         success('Fetched IP Address successfully.');
