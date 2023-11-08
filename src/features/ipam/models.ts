@@ -9,6 +9,16 @@ export interface IPAddress {
   NetworkID: string
 }
 
+export interface IP {
+  address: string
+  prefix: number
+}
+
+export interface NextIPResponse {
+  ip_address: string
+  prefix_length: number
+}
+
 export interface IPAddressResponse {
   ID: string;
   ip_address: string;

@@ -23,7 +23,8 @@ import { useHosts } from './useHosts';
 import { useTemplates } from './useTemplates';
 import { useNetworks } from './useNetworks';
 import { FormField } from '../../components/FormField';
-import { Network } from '../ipam/models';
+import { IP, Network } from '../ipam/models';
+import { getNextIP, networkDetails } from '../ipam/Network';
 
 type CreateModalProps = {
   open: boolean;
@@ -31,36 +32,6 @@ type CreateModalProps = {
   onSubmit: (values: CreateVirtualMachineRequest) => Promise<void>;
   columns: MRT_ColumnDef<CreateVirtualMachineRequest>[];
   onCompletion: () => void;
-};
-const isValidIP = (ip: string) => {
-  const regex = new RegExp(
-    '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$',
-  );
-  return regex.test(ip);
-};
-
-const validateForm = (values: CreateVirtualMachineRequest) => {
-  const errors: { [key in keyof CreateVirtualMachineRequest]?: string } = {};
-
-  if (!values.name) {
-    errors.name = 'Name is required';
-  }
-
-  if (!values.ip) {
-    errors.ip = 'IP address is required';
-  } else if (!isValidIP(values.ip)) {
-    errors.ip = 'IP address is invalid';
-  }
-
-  if (!values.host) {
-    errors.host = 'Host is required';
-  }
-
-  if (!values.folder) {
-    errors.folder = 'Folder is required';
-  }
-
-  return errors;
 };
 
 const CreateNewVirtualMachineModal = ({
@@ -95,10 +66,21 @@ const CreateNewVirtualMachineModal = ({
   const networks = useNetworks(open);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (accessorKey: string, value: any) => {
+  const handleChange = async (accessorKey: string, value: any) => {
     setValues({ ...values, [accessorKey]: value });
+
     if (accessorKey === 'network_id') {
-      const network: Network = value;
+      try {
+        const network = await networkDetails(value); // wait for the network details
+        const freeIP = await getNextIP(network.id); // wait for the next IP
+        setValues((prevValues) => ({
+          ...prevValues,
+          ip: freeIP.address,
+        }));
+        //setValues({ ...values, ip: freeIP.address });
+      } catch (error) {
+        console.error('An error occurred while fetching network details or IP', error);
+      }
     }
   };
 

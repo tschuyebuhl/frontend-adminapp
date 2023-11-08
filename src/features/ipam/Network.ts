@@ -1,6 +1,6 @@
 import { QueryKey } from '@tanstack/react-query';
 import api, { Pagination } from '../../util/api';
-import { Network, NetworkWebModel, IPAddress, CreateNetworkRequest, CreateIPAddressRequest, DeleteIPAddressRequest, IPAddressResponse } from './models';
+import { Network, NetworkWebModel, IPAddress, CreateNetworkRequest, CreateIPAddressRequest, DeleteIPAddressRequest, IPAddressResponse, IP } from './models';
 
 export async function getNetworks(pagination: Pagination): Promise<{ networks: Network[], total: number }> {
   const response = await api.get('/api/v1/ipam/networks', { params: pagination });
@@ -50,6 +50,25 @@ export async function getNetwork({ queryKey }: { queryKey: QueryKey; }): Promise
   };
 }
 
+export async function networkDetails(code: string): Promise<Network> {
+  const response = await api.get(`/api/v1/ipam/networks/${code}`);
+  const network: NetworkWebModel = response.data;
+
+  return {
+    id: network.ID,
+    name: network.Name,
+    vlanId: network.VlanID,
+    subnetMask: network.SubnetMask,
+    gateway: network.Gateway,
+    address: network.Address,
+    dhcpEnabled: network.DHCPEnabled,
+    dhcpStart: network.DHCPStart,
+    dhcpEnd: network.DHCPEnd,
+    portGroupId: network.PortGroupID,
+  };
+}
+
+
 export async function getIPAddresses({ queryKey }: { queryKey: QueryKey; }): Promise<IPAddress[]> {
   const name = queryKey[1];
   const response = await api.get(`/api/v1/ipam/networks/${name}/ip-addresses`);
@@ -93,6 +112,14 @@ export async function deleteNetwork(code: string): Promise<void> {
 
 export async function updateNetwork(code: string, data: CreateNetworkRequest): Promise<void> {
   await api.put(`/api/v1/ipam/networks/${code}`, data);
+}
+
+export async function getNextIP(id: string): Promise<IP> {
+  const response = await api.get(`/api/v1/ipam/networks/${id}/free-ip`);
+  return {
+    address: response.data.ip_address,
+    prefix: response.data.prefix_length,
+  };
 }
 
 export const validateForm = (values: CreateNetworkRequest) => {
