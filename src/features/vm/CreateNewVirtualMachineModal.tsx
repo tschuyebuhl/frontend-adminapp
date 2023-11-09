@@ -90,6 +90,7 @@ const CreateNewVirtualMachineModal = ({
       try {
         const network = await networkDetails(value); // wait for the network details
         const freeIP = await getNextIP(network.id); // wait for the next IP
+        console.log('dns servers: ', network.dnsServers);
         setValues((prevValues) => ({
           ...prevValues,
           ip: freeIP.address,
