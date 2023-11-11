@@ -1,13 +1,13 @@
 import { Box, Card, Divider, Grid, Paper, Tooltip, Typography } from '@mui/material';
 import { IPAddress, Network } from './models';
 
-//TODO this wont work above /24
 export const NetworkBoard: React.FC<{
   ipAddresses: IPAddress[];
   totalIPs: number;
   network: Network;
 }> = ({ network, ipAddresses, totalIPs }) => {
   return (
+    console.log('NetworkBoard.tsx: NetworkBoard: ipAddresses: ', ipAddresses, 'network: ', network),
     <Card sx={{}}>
       <Typography marginTop={5}>Visual subnet display</Typography>
       <Divider />

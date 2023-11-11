@@ -33,20 +33,21 @@ export const NetworkDetails: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [addIpModalOpen, setAddIpModalOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const network = useQuery(['name', name], getNetwork);
-  const ips = useQuery(['code', name], getIPAddresses);
+  const network = useQuery({ queryKey: ['name', name], queryFn: getNetwork});
+  const ips = useQuery({queryKey: ['code', name], queryFn: getIPAddresses});
 
   useEffect(() => {
     return () => {
-      queryClient.invalidateQueries(['name', name]);
-      queryClient.invalidateQueries(['code', name]);
+      queryClient.invalidateQueries({queryKey: ['name', name]});
+      queryClient.invalidateQueries({queryKey: ['code', name]});
+      // console.log(ips.error); this is go-style error handling 
     };
   }, [queryClient, name]);
 
   const handleCreateNewRow = async (values: CreateNetworkRequest) => {
     await updateNetwork(name ?? 'undefined', values);
     navigate('/ipam/' + values.name);
-    queryClient.invalidateQueries(['name', name]);
+    queryClient.invalidateQueries({queryKey: ['name', name]});
   };
 
   const handleCreateModalClose = () => {
@@ -63,12 +64,12 @@ export const NetworkDetails: React.FC = () => {
 
   const createNewIP = async (values: CreateIPAddressRequest) => {
     await createIPAddress(name ?? 'undefined', values);
-    queryClient.invalidateQueries(['code', name]);
+    queryClient.invalidateQueries({queryKey: ['code', name]});
   };
 
   const deleteIP = async (values: DeleteIPAddressRequest) => {
     await deleteIPAddress(values);
-    queryClient.invalidateQueries(['code', name]);
+    queryClient.invalidateQueries({queryKey: ['code', name]});
   };
 
   const totalIPs = network.data?.subnetMask ? Math.pow(2, 32 - network.data.subnetMask) - 2 : 0;

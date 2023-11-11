@@ -4,13 +4,13 @@ import { Network, NetworkWebModel, IPAddress, CreateNetworkRequest, CreateIPAddr
 
 export async function getNetworks(pagination: Pagination): Promise<{ networks: Network[], total: number }> {
   const response = await api.get('/api/v1/ipam/networks', { params: pagination });
-  const data = response.data;
+  const apiResponse = response.data.data;
 
-  if (!data.networks || !Array.isArray(data.networks)) {
+  if (!apiResponse || !Array.isArray(apiResponse)) {
     // Handle unexpected data shape by defaulting to an empty array and zero total
     return { networks: [], total: 0 };
   }
-  const mappedNetworks = data.networks.map((network: NetworkWebModel) => ({
+  const mappedNetworks = apiResponse.map((network: NetworkWebModel) => ({
     id: network.ID,
     name: network.Name,
     vlanId: network.VlanID,
@@ -20,10 +20,11 @@ export async function getNetworks(pagination: Pagination): Promise<{ networks: N
     dhcpEnabled: network.DHCPEnabled,
     dhcpStart: network.DHCPStart,
     dhcpEnd: network.DHCPEnd,
-    portGroupId: network.PortGroupID
+    portGroupId: network.PortGroupID,
+    dnsServers: network.DNSServers,
   }));
 
-  return { networks: mappedNetworks, total: data.total };
+  return { networks: mappedNetworks, total: response.data.total };
 }
 
 export const ipToNumber = (ip: string) => {
@@ -74,7 +75,7 @@ export async function networkDetails(code: string): Promise<Network> {
 export async function getIPAddresses({ queryKey }: { queryKey: QueryKey; }): Promise<IPAddress[]> {
   const name = queryKey[1];
   const response = await api.get(`/api/v1/ipam/networks/${name}/ip-addresses`);
-  const data = response.data;
+  const data = response.data.Data;
 
   return data.map((item: IPAddressResponse) => ({
     ID: item.ID,
@@ -154,3 +155,4 @@ export const validateIP = (values: CreateIPAddressRequest) => {
   }
   return errors;
 };
+

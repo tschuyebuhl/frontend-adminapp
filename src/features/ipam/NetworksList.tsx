@@ -1,8 +1,8 @@
-import MaterialReactTable from 'material-react-table';
+import { MaterialReactTable } from 'material-react-table';
 import { Box, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { networkColumns } from './Columns';
-import { Network } from './Network';
+import { Network } from './models';
 
 interface NetworksListProps {
   networks: Network[];
@@ -43,7 +43,7 @@ export function NetworksList({
             Details
           </Button>,
         ]}
-        muiTablePaginationProps={{
+        muiPaginationProps={{
           rowsPerPageOptions: [5, 10, 25],
           showFirstButton: true,
           showLastButton: true,

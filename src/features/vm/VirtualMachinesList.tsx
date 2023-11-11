@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getVirtualMachines, CreateVirtualMachineRequest, createVirtualMachine } from './VirtualMachine';
-import MaterialReactTable from 'material-react-table';
+import { MaterialReactTable } from 'material-react-table';
 import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { vmColumns, columns } from './ModalColumns';
@@ -18,11 +18,12 @@ export function VirtualMachinesList() {
   const [offset, setOffset] = useState(0);
   const navigate = useNavigate();
 
-  const virtualMachinesQuery = useQuery(
-    ['virtualMachines', { offset, limit }],
-    () => getVirtualMachines({ offset, limit }),
-    { refetchOnWindowFocus: false }
-  );
+  const virtualMachinesQuery = useQuery({
+    queryKey: ['virtualMachines', { offset, limit }],
+    queryFn: () => getVirtualMachines({ offset, limit }),
+    refetchOnWindowFocus: false
+  });
+  
 
   const { data: virtualMachines, refetch } = virtualMachinesQuery;
 
@@ -95,7 +96,7 @@ export function VirtualMachinesList() {
               Create a New VM
             </Button>
           )}
-          muiTablePaginationProps={{
+          muiPaginationProps={{
             rowsPerPageOptions: [5, 10, 25],
             showFirstButton: true,
             showLastButton: true,

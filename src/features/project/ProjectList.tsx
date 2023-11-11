@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { getProjects, Project, createProject } from './Project';
-import MaterialReactTable from 'material-react-table';
+import  { MaterialReactTable } from 'material-react-table';
 import { useNavigate } from 'react-router-dom';
 import  { columns }  from './ProjectColumns';
 import { CreateNewProjectModal } from './CreateNewProjectModal';
@@ -77,7 +77,7 @@ export function ProjectList() {
           </Button>)}
         columns={columns}
         enableColumnResizing={false}
-        muiTablePaginationProps={{
+        muiPaginationProps={{
           rowsPerPageOptions: [5, 10, 25],
           showFirstButton: true,
           showLastButton: true,

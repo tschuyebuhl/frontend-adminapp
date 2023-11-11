@@ -15,12 +15,12 @@ export function IPAM() {
   const offset = pagination.pageIndex * pagination.pageSize;
   const limit = pagination.pageSize;
 
-  const networksQuery = useQuery(
-    ['networks', { offset, limit }],
-    () => getNetworks({ offset, limit }),
-    { refetchOnWindowFocus: false },
-  );
-
+  const networksQuery = useQuery({
+    queryKey: ['virtualMachines', { offset, limit }],
+    queryFn: () => getNetworks({ offset, limit }),
+    refetchOnWindowFocus: false
+  });
+  
   const { refetch } = networksQuery;
 
   useEffect(() => {
