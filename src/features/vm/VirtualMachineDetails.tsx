@@ -2,33 +2,24 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getVirtualMachine, stopVirtualMachine, startVirtualMachine } from './VirtualMachine';
 import { useQuery } from '@tanstack/react-query';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {
-  Avatar,
-  Box,
-  Button,
-  Chip,
-  Typography,
-} from '@mui/material';
+import { Avatar, Box, Button, Chip, Typography } from '@mui/material';
 import { Loading } from '../../components/Loading';
 
-import  VMInfo  from './VMInfo';
+import VMInfo from './VMInfo';
 import VMActions from './VMActions';
 
 export function VirtualMachineDetails() {
-
   const { name } = useParams<string>();
   let navigate = useNavigate();
-  const results = useQuery(['name', name], getVirtualMachine);
-
-
+  const results = useQuery({ queryKey: ['name', name], queryFn: getVirtualMachine });
 
   if (results.isLoading) {
-    <Loading />
-}
+    <Loading />;
+  }
   return (
     <Box>
       <Typography variant="h4" textAlign="center">
-      {name}
+        {name}
       </Typography>
       <VMActions />
       <VMInfo />

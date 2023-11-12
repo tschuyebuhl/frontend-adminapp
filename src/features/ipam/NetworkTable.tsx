@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { Network } from './Network';
+import { Network } from './models';
 
 interface NetworkTableProps {
   networks: Network[];
