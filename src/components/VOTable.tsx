@@ -1,45 +1,49 @@
-import { MaterialReactTable } from 'material-react-table';
 import { Box, Typography, Button } from '@mui/material';
+import { MaterialReactTable, MRT_ColumnDef, MRT_RowData } from 'material-react-table';
 import { Link } from 'react-router-dom';
-import { networkColumns } from './Columns';
-import { Network } from './models';
 
-interface NetworksListProps {
-  networks: Network[];
+export interface VOTableProps<T extends MRT_RowData> {
+  title: string;
+  columns: MRT_ColumnDef<T>[];
+  data: T[];
   pagination: { pageIndex: number; pageSize: number };
   setPagination: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
-  totalNetworks?: number;
+  totalItems?: number;
+  detailPath: string; // e.g. '/settings/ssh-keys/' or '/ipam/'
 }
 
-export function NetworksList({
-  networks,
+export function VOTable<T extends MRT_RowData>({
+  title,
+  columns,
+  data,
   pagination,
   setPagination,
-  totalNetworks,
-}: NetworksListProps) {
+  totalItems,
+  detailPath,
+}: VOTableProps<T>) {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h4" textAlign="center" sx={{ mb: 1 }}>
-        Networks
+        {title}
       </Typography>
       <MaterialReactTable
-        columns={networkColumns}
-        data={networks}
+        columns={columns}
+        data={data}
         manualPagination
         enableColumnResizing={false}
         enableRowActions={true}
         onPaginationChange={setPagination}
         state={{ pagination }}
-        rowCount={totalNetworks}
+        rowCount={totalItems}
         positionActionsColumn="last"
         displayColumnDefOptions={{
           'mrt-row-actions': {
-            header: 'Network Details',
+            header: `${title} Details`,
             size: 15,
           },
         }}
         renderRowActions={({ row }) => [
-          <Button variant="outlined" component={Link} to={`/ipam/${row.original.name}`}>
+          <Button variant="outlined" component={Link} to={`${detailPath}${row.original.name}`}>
             Details
           </Button>,
         ]}

@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { SidebarItems } from './SidebarItems';
-import { Sidebar } from '../../components/Sidebar';
 import { useQuery } from '@tanstack/react-query';
 import { getNetworks } from './Network';
-import Box from '@mui/material/Box';
-import { NetworksList } from './NetworksList';
+import { VOTable } from '../../components/VOTable';
+import { networkColumns } from './Columns';
+import { Network } from './models';
 
 export function IPAM() {
   const [pagination, setPagination] = useState({
@@ -18,9 +17,9 @@ export function IPAM() {
   const networksQuery = useQuery({
     queryKey: ['virtualMachines', { offset, limit }],
     queryFn: () => getNetworks({ offset, limit }),
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
-  
+
   const { refetch } = networksQuery;
 
   useEffect(() => {
@@ -33,11 +32,14 @@ export function IPAM() {
   //List of IP Addresses on Details
   //Maybe a map of the network?
   return (
-    <NetworksList
-      networks={networksQuery.data?.networks || []}
-      totalNetworks={networksQuery.data?.total || 0}
+    <VOTable<Network>
+      columns={networkColumns}
+      data={networksQuery.data?.networks || []}
+      totalItems={networksQuery.data?.total || 0}
       pagination={pagination}
       setPagination={setPagination}
+      title={'SSH Keys'}
+      detailPath="/ipam"
     />
   );
 }
