@@ -1,5 +1,5 @@
 import { MRT_ColumnDef } from 'material-react-table';
-import { VirtualMachine, CreateVirtualMachineRequest } from './VirtualMachine';
+import { VirtualMachine, CreateVirtualMachineRequest } from '../features/vm/VirtualMachine';
 import { useMemo } from 'react';
 
 //keys: string, values of any type

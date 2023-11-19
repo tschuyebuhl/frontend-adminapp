@@ -37,7 +37,7 @@ export default function VMInfo() {
     { key: 2, label: 'PostgreSQL' },
     { key: 3, label: 'nginx' },
     { key: 4, label: 'Vector' },
-  ]);
+  ]); //TODO: get installed software from API
 
   const { name } = useParams<string>();
   const results = useQuery({ queryKey: ['name', name], queryFn: getVirtualMachine });

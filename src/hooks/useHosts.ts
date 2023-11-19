@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Host, fetchHosts } from '../../models/Host';
+import { Host, fetchHosts } from '../models/Host';
 
 export const useHosts = (open: boolean) => {
   const [hosts, setHosts] = useState<Host[]>([]);

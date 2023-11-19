@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { getVirtualMachines, CreateVirtualMachineRequest, createVirtualMachine } from './VirtualMachine';
+import {
+  getVirtualMachines,
+  CreateVirtualMachineRequest,
+  createVirtualMachine,
+} from './VirtualMachine';
 import { MaterialReactTable } from 'material-react-table';
 import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { vmColumns, columns } from './ModalColumns';
+import { vmColumns, columns } from '../../models/ModalColumns';
 
-import {
-  Box,
-  Button,
-  Typography,
-} from '@mui/material';
-import CreateNewVirtualMachineModal from "./CreateNewVirtualMachineModal";
+import { Box, Button, Typography } from '@mui/material';
+import CreateNewVirtualMachineModal from './CreateNewVirtualMachineModal';
 
 export function VirtualMachinesList() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -21,9 +21,8 @@ export function VirtualMachinesList() {
   const virtualMachinesQuery = useQuery({
     queryKey: ['virtualMachines', { offset, limit }],
     queryFn: () => getVirtualMachines({ offset, limit }),
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
-  
 
   const { data: virtualMachines, refetch } = virtualMachinesQuery;
 
@@ -50,9 +49,9 @@ export function VirtualMachinesList() {
     try {
       await createVirtualMachine(values);
       handleCreateModalClose();
-      refetch(); 
+      refetch();
     } catch (error) {
-      console.error("Error creating a new virtual machine:", error);
+      console.error('Error creating a new virtual machine:', error);
     }
   };
 
@@ -60,60 +59,55 @@ export function VirtualMachinesList() {
     navigate('/virtual-machines/' + name);
   }
 
-
   return (
     <Box sx={{ p: 2 }}>
-      <Typography
-        variant="h4"
-        textAlign="center"
-        sx={{ mb: 1}}
-        >
-          Virtual Machines
-        </Typography>
-        <MaterialReactTable
-          columns={columns}
-          data={virtualMachines?.VMs? virtualMachines.VMs : []}
-          manualPagination
-          enableColumnResizing={false}
-          enableRowActions={true}
-          onPaginationChange={setPagination} 
-          state={{ pagination }} 
-          rowCount={virtualMachines? virtualMachines.Count : 0}
-          positionActionsColumn="last"
-          displayColumnDefOptions={{
-            'mrt-row-actions': {
-              header: 'VM Details',
-              size: 15,
-            },
-          }}
-          renderRowActions={({ row }) => [
-            <Button variant="outlined" component={Link} to={`/virtual-machines/${row.original.Name}`}>
+      <Typography variant="h4" textAlign="center" sx={{ mb: 1 }}>
+        Virtual Machines
+      </Typography>
+      <MaterialReactTable
+        columns={columns}
+        data={virtualMachines?.VMs ? virtualMachines.VMs : []}
+        manualPagination
+        enableColumnResizing={false}
+        enableRowActions={true}
+        onPaginationChange={setPagination}
+        state={{ pagination }}
+        rowCount={virtualMachines ? virtualMachines.Count : 0}
+        positionActionsColumn="last"
+        displayColumnDefOptions={{
+          'mrt-row-actions': {
+            header: 'VM Details',
+            size: 15,
+          },
+        }}
+        renderRowActions={({ row }) => [
+          <Button variant="outlined" component={Link} to={`/virtual-machines/${row.original.Name}`}>
             Details
-            </Button>,
-          ]}
-          renderTopToolbarCustomActions={() => (
-            <Button color="secondary" onClick={handleCreateModalOpen} variant="contained">
-              Create a New VM
-            </Button>
-          )}
-          muiPaginationProps={{
-            rowsPerPageOptions: [5, 10, 25],
-            showFirstButton: true,
-            showLastButton: true,
-          }}
-          muiTableProps={{
-            sx: {
+          </Button>,
+        ]}
+        renderTopToolbarCustomActions={() => (
+          <Button color="secondary" onClick={handleCreateModalOpen} variant="contained">
+            Create a New VM
+          </Button>
+        )}
+        muiPaginationProps={{
+          rowsPerPageOptions: [5, 10, 25],
+          showFirstButton: true,
+          showLastButton: true,
+        }}
+        muiTableProps={{
+          sx: {
             //  tableLayout: 'fixed',
-            },
-          }}
-        />
-        <CreateNewVirtualMachineModal
-          open={createModalOpen}
-          onClose={handleCreateModalClose}
-          onSubmit={handleCreateNewRow}
-          columns={vmColumns}
-          onCompletion={refetch}
-        />
-      </Box>
+          },
+        }}
+      />
+      <CreateNewVirtualMachineModal
+        open={createModalOpen}
+        onClose={handleCreateModalClose}
+        onSubmit={handleCreateNewRow}
+        columns={vmColumns}
+        onCompletion={refetch}
+      />
+    </Box>
   );
 }

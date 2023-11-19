@@ -4,21 +4,21 @@ import Button from '@mui/material/Button';
 import { Box, CircularProgress, List, ListItem, ListItemText, Typography } from '@mui/material';
 
 export function TemplateList() {
-  const [tickets, setTickets] = useState<Template[]>([]);
+  const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchTickets() {
+    async function fetchTemplates() {
       const data = await getTemplates({ offset: 0, limit: 20 });
       setLoading(false);
-      setTickets(
+      setTemplates(
         data.Templates.map((t) => ({
           ...t,
           clickCount: 0,
         })),
       );
     }
-    fetchTickets();
+    fetchTemplates();
   }, []);
 
   if (loading) {
@@ -39,10 +39,10 @@ export function TemplateList() {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h4" gutterBottom>
-        Tickets
+        Templates
       </Typography>
       <List>
-        {tickets.map((t) => (
+        {templates.map((t) => (
           <ListItem
             key={t.ID}
             disablePadding

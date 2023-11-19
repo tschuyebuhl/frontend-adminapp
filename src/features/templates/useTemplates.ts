@@ -1,19 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Host, fetchHosts } from '../../models/Host';
-import { Folder, fetchFolders } from '../../models/Folder';
-import { Template } from './Template';
+import { Template, getTemplates } from './Template';
 
-export const useFetchHostsAndFolders = (open: boolean) => {
+export const useTemplates = (open: boolean) => {
   const [templates, setTemplates] = useState<Template[]>([]);
-  const [folders, setFolders] = useState<Folder[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedHosts = await fetchHosts();
-      const fetchedFolders = await fetchFolders();
+      const fetchedTemplates = await getTemplates();
 
-      setHosts(fetchedHosts);
-      setFolders(fetchedFolders);
+      setTemplates(fetchedTemplates.Templates);
     };
 
     if (open) {
@@ -21,5 +16,5 @@ export const useFetchHostsAndFolders = (open: boolean) => {
     }
   }, [open]);
 
-  return { hosts, folders };
+  return { templates };
 };

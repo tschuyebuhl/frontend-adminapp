@@ -19,11 +19,11 @@ export interface Template {
   MemoryGB: number
   StorageGB: number
   ExternalID: string
-  ExtraInfo: any //could be any of extrainfos, between vmware, azure, aws, gcp
+  ExtraInfo: VMWareExtraInfo //could be any of extrainfos, between vmware, azure, aws, gcp
 }
 
 //vmware
-export interface ExtraInfo {
+export interface VMWareExtraInfo {
   nic: string
   disk: string
   library_name: string
@@ -37,7 +37,7 @@ export interface ExtraInfo {
 }
 
 
-export async function getTemplates(params: { offset: number; limit: number }): Promise<{ Templates: Template[], Count: number }> {
+export async function getTemplates(params?: { offset: number; limit: number }): Promise<{ Templates: Template[], Count: number }> {
   const response = await api.get('/api/v1/templates', {
     params,
   });

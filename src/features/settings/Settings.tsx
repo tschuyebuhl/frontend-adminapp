@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { SSHKey, SSHKeyPageData, getSSHKeys, sshKeyColumns } from './models';
-import { SSHKeysTable } from './SSHKeysTable';
 import { VOTable } from '../../components/VOTable';
 
 export const Settings = () => {

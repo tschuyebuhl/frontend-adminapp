@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Datastore, fetchDatastores } from '../../models/Datastore'
+import { Datastore, fetchDatastores } from '../models/Datastore'
 
 export const useDatastores = (open: boolean) => {
   const [datastores, setDatastores] = useState<Datastore[]>([]);

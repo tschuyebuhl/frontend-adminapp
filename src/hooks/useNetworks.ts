@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Network } from '../ipam/models';
-import { getNetworks } from '../ipam/Network';
+import { Network } from '../features/ipam/models';
+import { getNetworks } from '../features/ipam/Network';
 
 export const useNetworks = (open: boolean) => {
   const [networks, setNetworks] = useState<Network[]>([]);

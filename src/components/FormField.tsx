@@ -13,7 +13,7 @@ import {
   FormHelperText,
 } from '@mui/material';
 import { CreateVirtualMachineRequest } from '../features/vm/VirtualMachine';
-import { ColumnDef } from '../features/vm/ModalColumns';
+import { ColumnDef } from '../models/ModalColumns';
 
 interface FormFieldProps {
   column: ColumnDef<CreateVirtualMachineRequest>;

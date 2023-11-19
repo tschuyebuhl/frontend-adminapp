@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Template, getTemplates } from '../templates/Template';
+import { Template, getTemplates } from '../features/templates/Template';
 
 
 export const useTemplates = (open: boolean) => {

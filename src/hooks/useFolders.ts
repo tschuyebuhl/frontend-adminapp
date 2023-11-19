@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Folder, fetchFolders } from '../../models/Folder';
+import { Folder, fetchFolders } from '../models/Folder';
 
 export const useFolders = (open: boolean) => {
   const [folders, setFolders] = useState<Folder[]>([]);

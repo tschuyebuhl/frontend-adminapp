@@ -19,9 +19,9 @@ import {
   cloneVirtualMachine,
   getVirtualMachines,
 } from './VirtualMachine';
-import { useFolders } from './useFolders';
-import { useHosts } from './useHosts';
-import { useDatastores } from './useDatastores';
+import { useFolders } from '../../hooks/useFolders';
+import { useHosts } from '../../hooks/useHosts';
+import { useDatastores } from '../../hooks/useDatastores';
 
 interface VMCloneDialogProps {
   openCloneDialog: boolean;
