@@ -38,8 +38,8 @@ export function IPAM() {
       totalItems={networksQuery.data?.total || 0}
       pagination={pagination}
       setPagination={setPagination}
-      title={'SSH Keys'}
-      detailPath="/ipam"
+      title={'Networks'}
+      detailPath="/ipam/"
     />
   );
 }

@@ -10,6 +10,7 @@ import ProjectDetails from '../features/project/ProjectDetails';
 import { NetworkDetails } from '../features/ipam/NetworkDetails';
 import { Settings } from '../features/settings/Settings';
 import { TemplateList } from '../features/templates/TemplateList';
+import { useAuth } from 'react-oidc-context';
 
 const router = createBrowserRouter([
   {

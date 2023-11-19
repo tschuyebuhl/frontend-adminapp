@@ -38,7 +38,7 @@ export function VOTable<T extends MRT_RowData>({
         positionActionsColumn="last"
         displayColumnDefOptions={{
           'mrt-row-actions': {
-            header: `${title} Details`,
+            header: `Details`,
             size: 15,
           },
         }}
