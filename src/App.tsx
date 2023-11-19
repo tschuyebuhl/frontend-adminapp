@@ -8,8 +8,8 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { AuthProvider, AuthProviderProps, hasAuthParams, useAuth } from 'react-oidc-context';
-import React, { useState } from 'react';
+import { hasAuthParams, useAuth } from 'react-oidc-context';
+import React, { useEffect, useState } from 'react';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +25,13 @@ export default function App() {
 
   // automatically sign-in
   React.useEffect(() => {
+    console.log(
+      hasAuthParams(),
+      auth.isAuthenticated,
+      auth.activeNavigator,
+      auth.isLoading,
+      hasTriedSignin,
+    );
     if (
       !hasAuthParams() &&
       !auth.isAuthenticated &&
@@ -36,15 +43,6 @@ export default function App() {
       setHasTriedSignin(true);
     }
   }, [auth, hasTriedSignin]);
-
-  if (auth.isLoading) {
-    return <div>Signing you in/out...</div>;
-  }
-
-  if (!auth.isAuthenticated) {
-    return <div>Unable to log in</div>;
-  }
-
   return (
     <ThemeProvider theme={theme}>
       <ResponsiveAppBar />

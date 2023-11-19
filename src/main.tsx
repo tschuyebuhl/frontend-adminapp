@@ -9,6 +9,9 @@ const oidcConfig: AuthProviderProps = {
   client_id: 'admin-app',
   redirect_uri: 'http://localhost:5173',
   userStore: new WebStorageStateStore({ store: window.localStorage }),
+  onSigninCallback: (): void => {
+    window.history.replaceState({}, document.title, window.location.pathname);
+  },
 };
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

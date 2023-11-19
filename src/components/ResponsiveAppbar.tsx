@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import VCenterSelector from '../features/vcenter/VCenterSelector';
+import { useAuth } from 'react-oidc-context';
 
 const pages = [
   'Virtual Machines',
@@ -36,6 +37,7 @@ export const slugify = (...args: string[]): string => {
     .replace(/\s+/g, '-'); // separator
 };
 function ResponsiveAppBar() {
+  const auth = useAuth();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -149,11 +151,24 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              {auth.user?.profile.name}
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <a href={`/${setting}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </a>
                 </MenuItem>
               ))}
+              <MenuItem
+                onClick={() => {
+                  handleCloseUserMenu();
+                  auth.removeUser(); // Call the logout function
+                  auth.clearStaleState(); // Clear the state
+                  auth.signoutRedirect(); // Redirect to logout page
+                }}
+              >
+                <Typography textAlign="center">Working Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
