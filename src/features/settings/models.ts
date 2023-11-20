@@ -1,6 +1,7 @@
 import { MRT_ColumnDef } from "material-react-table"
 import api from "../../util/api"
 import { QueryKey } from "@tanstack/react-query"
+import { ColumnDef, FormColumn } from "../../types/FormColumn"
 
 export interface SSHKeyAPI {
   ID: string
@@ -10,6 +11,7 @@ export interface SSHKeyAPI {
   fingerprint: string
   public_key: string
 }
+
 export interface SSHKey {
   id: string
   name: string
@@ -19,8 +21,18 @@ export interface SSHKey {
   publicKey: string
 }
 
-export interface GenerateSSHKeyResponse extends SSHKey {
+export interface GeneratedSSHKey extends SSHKey {
+  privateKey: string
+}
+
+export interface GenerateSSHKeyResponse extends SSHKeyAPI {
   private_key: string
+}
+
+export interface GenerateSSHKeyRequest {
+  name: string
+  type: "rsa" | "ed25519"
+  length: number
 }
 
 export interface SSHKeyResponse {
@@ -71,6 +83,22 @@ export async function getSSHKey({ queryKey }: { queryKey: QueryKey; }): Promise<
   return key;
 }
 
+export async function generateSSHKey(key: GenerateSSHKeyRequest): Promise<GeneratedSSHKey> {
+  const response = await api.post<GenerateSSHKeyResponse>('/api/v1/settings/ssh-keys/generate', key);
+  const actualApiData = response.data;
+
+  let newKey = {
+    id: actualApiData.ID,
+    name: actualApiData.name,
+    type: actualApiData.type,
+    length: actualApiData.length,
+    fingerprint: actualApiData.fingerprint,
+    publicKey: actualApiData.public_key,
+    privateKey: actualApiData.private_key,
+  };
+  return newKey;
+}
+
 export const sshKeyColumns: MRT_ColumnDef<SSHKey>[] = [
   {
     header: 'Name',
@@ -92,4 +120,43 @@ export const sshKeyColumns: MRT_ColumnDef<SSHKey>[] = [
     header: 'Public Key',
     accessorKey: 'publicKey',
   },
-]; 
+];
+
+export const sshkeyFormColumns: FormColumn<GenerateSSHKeyRequest>[] = [
+  {
+    header: 'Key Name',
+    label: 'Key Name',
+    accessorKey: 'name',
+    type: 'string',
+  },
+  {
+    header: 'Key Length (bits)',
+    label: 'Key Length (bits)',
+    accessorKey: 'length',
+    type: 'number',
+  },
+  {
+    header: 'Key Type',
+    label: 'Key Type',
+    accessorKey: 'type',
+    type: 'string',
+  },
+]
+
+export const vmColumns: ColumnDef<GenerateSSHKeyRequest>[] = [
+  {
+    header: 'Name',
+    accessorKey: 'name',
+    type: 'text',
+  },
+  {
+    header: 'type',
+    accessorKey: 'type',
+    type: 'select',
+  },
+  {
+    header: 'Length',
+    accessorKey: 'length',
+    type: 'select',
+  },
+];

@@ -10,7 +10,17 @@ export interface VOTableProps<T extends MRT_RowData> {
   setPagination: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
   totalItems?: number;
   detailPath: string; // e.g. '/settings/ssh-keys/' or '/ipam/'
+  actionComponent?: React.ReactNode;
+  actionOnClick?: () => void;
+  actionEnabled?: boolean;
+  actionText?: string;
 }
+
+// renderTopToolbarCustomActions={() => (
+//   <Button color="secondary" onClick={handleCreateModalOpen} variant="contained">
+//     Create a New VM
+//   </Button>
+// )}
 
 export function VOTable<T extends MRT_RowData>({
   title,
@@ -20,6 +30,9 @@ export function VOTable<T extends MRT_RowData>({
   setPagination,
   totalItems,
   detailPath,
+  actionOnClick,
+  actionEnabled,
+  actionText,
 }: VOTableProps<T>) {
   return (
     <Box sx={{ p: 2 }}>
@@ -47,8 +60,18 @@ export function VOTable<T extends MRT_RowData>({
             Details
           </Button>,
         ]}
+        renderTopToolbarCustomActions={() => (
+          <Button
+            color="secondary"
+            onClick={actionOnClick}
+            variant="contained"
+            sx={{ display: actionEnabled ? 'flex' : 'none' }}
+          >
+            {actionText}
+          </Button>
+        )}
         muiPaginationProps={{
-          rowsPerPageOptions: [5, 10, 25],
+          rowsPerPageOptions: [1, 5, 10, 25],
           showFirstButton: true,
           showLastButton: true,
         }}

@@ -9,7 +9,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { hasAuthParams, useAuth } from 'react-oidc-context';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,7 +24,7 @@ export default function App() {
   const [hasTriedSignin, setHasTriedSignin] = useState(false);
 
   // automatically sign-in
-  React.useEffect(() => {
+  useEffect(() => {
     console.log(
       hasAuthParams(),
       auth.isAuthenticated,
@@ -43,6 +43,11 @@ export default function App() {
       setHasTriedSignin(true);
     }
   }, [auth, hasTriedSignin]);
+
+  if (!auth.isAuthenticated) {
+    return null;
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <ResponsiveAppBar />

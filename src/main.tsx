@@ -7,7 +7,7 @@ import { WebStorageStateStore } from 'oidc-client-ts';
 const oidcConfig: AuthProviderProps = {
   authority: 'https://keycloak.tecna.pl/realms/ksawery',
   client_id: 'admin-app',
-  redirect_uri: 'http://localhost:5173',
+  redirect_uri: window.location.origin,
   userStore: new WebStorageStateStore({ store: window.localStorage }),
   onSigninCallback: (): void => {
     window.history.replaceState({}, document.title, window.location.pathname);

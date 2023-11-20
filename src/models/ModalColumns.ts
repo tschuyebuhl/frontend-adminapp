@@ -1,11 +1,10 @@
 import { MRT_ColumnDef } from 'material-react-table';
 import { VirtualMachine, CreateVirtualMachineRequest } from '../features/vm/VirtualMachine';
-import { useMemo } from 'react';
 
 //keys: string, values of any type
 export interface ColumnDef<T> extends Record<string, any> {
   header: string;
-  accessorKey: keyof T;
+  accessorKey: Extract<keyof T, string>;
   type: 'text' | 'select' | 'number' | 'date' | 'array';
   accessorFn?: (row: T) => string | number | string[] | number[];
 }

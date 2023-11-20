@@ -13,54 +13,33 @@ import {
   MenuItem,
   Select,
 } from '@mui/material';
-import { MRT_ColumnDef } from 'material-react-table';
-import { VirtualMachine, CreateVirtualMachineRequest, getVirtualMachines } from './VirtualMachine';
-import { Host, fetchHosts } from '../../models/Host';
-import { Folder, fetchFolders } from '../../models/Folder';
-import { vmColumns } from '../../models/ModalColumns';
-import { useFolders } from '../../hooks/useFolders';
-import { useHosts } from '../../hooks/useHosts';
-import { useTemplates } from '../../hooks/useTemplates';
-import { useNetworks } from '../../hooks/useNetworks';
-import { FormField } from '../../components/FormField';
-import { IP, Network } from '../ipam/models';
-import { getNextIP, networkDetails } from '../ipam/Network';
-import { AlertSnackbar } from '../../components/AlertSnackbar';
-
-type CreateModalProps = {
+import { MRT_ColumnDef, MRT_RowData } from 'material-react-table';
+import { networkDetails, getNextIP } from '../features/ipam/Network';
+import { CreateVirtualMachineRequest } from '../features/vm/VirtualMachine';
+import { useFolders } from '../hooks/useFolders';
+import { useHosts } from '../hooks/useHosts';
+import { useNetworks } from '../hooks/useNetworks';
+import { useTemplates } from '../hooks/useTemplates';
+import { ColumnDef, vmColumns } from '../models/ModalColumns';
+import { AlertSnackbar } from './AlertSnackbar';
+import { FormField } from './FormField';
+type CreateModalProps<T extends MRT_RowData> = {
   open: boolean;
   onClose: () => void;
-  onSubmit: (values: CreateVirtualMachineRequest) => Promise<void>;
-  columns: MRT_ColumnDef<CreateVirtualMachineRequest>[];
+  onSubmit: (values: T) => Promise<void>;
+  columns: ColumnDef<T>[];
   onCompletion: () => void;
 };
 
-const CreateNewVirtualMachineModal = ({
+const CreateNewVirtualMachineModal = <T extends {}>({
   open,
   columns,
   onClose,
   onSubmit,
   onCompletion,
-}: CreateModalProps) => {
-  // Initialize values based on columns
-  const initialValues: CreateVirtualMachineRequest = {
-    name: '',
-    ip: '',
-    host: '',
-    network_id: '',
-    folder: '',
-    prefix: 0,
-    dns_servers: [],
-    gateway: '',
-    domain: '',
-    timezone: '',
-    template_id: '',
-    provider: '',
-    ssh_keys: [],
-  };
-
-  const [values, setValues] = useState<CreateVirtualMachineRequest>(initialValues);
-  const [errors, setErrors] = useState<{ [key in keyof CreateVirtualMachineRequest]?: string }>({});
+}: CreateModalProps<T>) => {
+  const [values, setValues] = useState<T>();
+  const [errors, setErrors] = useState<{ [key in keyof T]?: string }>({});
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
   const [snackbarMessage, setSnackbarMessage] = useState<string>('Success!');
@@ -77,32 +56,10 @@ const CreateNewVirtualMachineModal = ({
     setSnackbarMessage(message ?? 'Operation failed. Please check server logs.');
   };
 
-  const hosts = useHosts(open);
-  const folders = useFolders(open);
-  const templates = useTemplates(open);
-  const networks = useNetworks(open);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = async (accessorKey: string, value: any) => {
+  const handleChange = async (accessorKey: keyof T, value: any) => {
     setValues({ ...values, [accessorKey]: value });
-
-    if (accessorKey === 'network_id') {
-      try {
-        const network = await networkDetails(value); // wait for the network details
-        const freeIP = await getNextIP(network.id); // wait for the next IP
-        console.log('dns servers: ', network.dnsServers);
-        setValues((prevValues) => ({
-          ...prevValues,
-          ip: freeIP.address,
-          dns_servers: network.dnsServers,
-          gateway: network.gateway,
-        }));
-        success('Fetched IP Address successfully.');
-      } catch (fetchError) {
-        console.error('An error occurred while fetching network details or IP', fetchError);
-        error('test');
-      }
-    }
   };
 
   const handleSubmit = async (event: React.FormEvent) => {

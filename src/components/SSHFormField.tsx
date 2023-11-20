@@ -9,29 +9,29 @@ import {
   FormHelperText,
 } from '@mui/material';
 import { ColumnDef } from '../models/ModalColumns';
-import { CreateVirtualMachineRequest } from '../features/vm/VirtualMachine';
+import { GenerateSSHKeyRequest } from '../features/settings/models';
 
 interface FormFieldProps<T> {
   column: ColumnDef<T>;
   value: any;
-  onChange: (accessorKey: keyof T, value: any) => void;
+  onChange: (accessorKey: string, value: any) => void;
   items?: any[];
-  errors?: { [key in keyof T]?: string };
+  errors?: { [key: string]: string };
 }
 
-export const FormField = <T extends {}>({
+export const FormField: React.FC<FormFieldProps<GenerateSSHKeyRequest>> = ({
   column,
   value,
   onChange,
   items,
   errors,
-}: FormFieldProps<T>) => {
+}) => {
   const handleChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-    onChange(event.target.name as keyof T, event.target.value);
+    onChange(event.target.name as string, event.target.value);
   };
 
   const handleSelectChange = (event: SelectChangeEvent) => {
-    onChange(event.target.name as keyof T, event.target.value);
+    onChange(event.target.name as string, event.target.value as string);
   };
 
   switch (column.type) {

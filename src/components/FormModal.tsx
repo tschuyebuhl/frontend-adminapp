@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Button,
   Dialog,
@@ -8,29 +8,19 @@ import {
   DialogTitle,
   Stack,
   TextField,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
 } from '@mui/material';
 import { FormColumn } from '../types/FormColumn';
+import { FormField } from './FormField';
 
 type FormModalProps<T extends Record<string, any>> = {
   title: string;
   open: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   onSubmit: (values: T) => Promise<void>;
   columns: FormColumn<T>[];
   onCompletion?: () => void;
   initialValues: T;
   validate: (values: T) => { [key in keyof T]?: string };
-};
-
-const isValidIP = (ip: string) => {
-  const regex = new RegExp(
-    '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$',
-  );
-  return regex.test(ip);
 };
 
 const FormModal = <T extends Record<string, any>>({
@@ -55,10 +45,7 @@ const FormModal = <T extends Record<string, any>>({
 
   useEffect(() => {
     if (open) {
-      //fetchData();
       setValues(initialValues);
-      const errors = validate(values);
-      setErrors(errors);
     }
   }, [open]);
 
@@ -73,7 +60,9 @@ const FormModal = <T extends Record<string, any>>({
       console.error('There was an issue:', error);
     } finally {
       setLoading(false);
-      onClose();
+      if (onClose) {
+        onClose();
+      }
     }
   };
 
