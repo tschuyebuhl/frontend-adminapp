@@ -26,6 +26,7 @@ import { FormField } from '../../components/FormField';
 import { IP, Network } from '../ipam/models';
 import { getNextIP, networkDetails } from '../ipam/Network';
 import { AlertSnackbar } from '../../components/AlertSnackbar';
+import { useSSHKeys } from '../../hooks/useSSHKeys';
 
 type CreateModalProps = {
   open: boolean;
@@ -81,6 +82,7 @@ const CreateNewVirtualMachineModal = ({
   const folders = useFolders(open);
   const templates = useTemplates(open);
   const networks = useNetworks(open);
+  const sshKeys = useSSHKeys(open);
   const [loading, setLoading] = useState(false);
 
   const handleChange = async (accessorKey: string, value: any) => {
@@ -131,6 +133,8 @@ const CreateNewVirtualMachineModal = ({
         return networks;
       case 'template_id':
         return templates;
+      case 'ssh_keys':
+        return sshKeys;
       default:
         return [];
     }
