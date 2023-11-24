@@ -47,7 +47,10 @@ export const FormField = <T extends {}>({
             error={Boolean(errors?.[column.accessorKey])}
           >
             {items?.map((item) => (
-              <MenuItem key={item.ID ?? item.id} value={item.Name ?? item.name}>
+              <MenuItem
+                key={item.ID ?? item.id}
+                value={item.VsphereID ?? item.ID ?? item.Name ?? item.name ?? item.id} // zawiłe. próbuje fetchować po tym property, co jest problematyczne. trzeba by to jakoś ogarnąć
+              >
                 {item.Name ?? item.name}
               </MenuItem>
             ))}
@@ -57,6 +60,7 @@ export const FormField = <T extends {}>({
           )}
         </FormControl>
       );
+
     case 'text':
       return (
         <TextField

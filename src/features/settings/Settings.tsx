@@ -6,10 +6,10 @@ import {
   generateSSHKey,
   getSSHKeys,
   sshKeyColumns,
-  sshkeyFormColumns,
+  sshKeyFormColumns,
 } from './models';
 import { VOTable } from '../../components/VOTable';
-import FormModal from '../../components/FormModal';
+import GenerateSSHKeyModal from './GenerateSSHKeyModal';
 
 const generateKey = async (values: GenerateSSHKeyRequest) => {
   await generateSSHKey(values);
@@ -27,11 +27,14 @@ export const Settings = () => {
   const limit = pagination.pageSize;
 
   useEffect(() => {
+    refetch();
+  }, [offset, limit]);
+
+  const refetch = () => {
     getSSHKeys({ offset, limit }).then((fetchedKeys) => {
       setKeys(fetchedKeys);
     });
-  }, [offset, limit]);
-
+  };
   return (
     <>
       <VOTable<SSHKey>
@@ -46,23 +49,12 @@ export const Settings = () => {
         actionOnClick={() => setModalOpen(true)}
         actionEnabled
       />
-      <FormModal<GenerateSSHKeyRequest>
-        title={'Add IP'}
+      <GenerateSSHKeyModal
         open={modalOpen}
-        //onClose={() => setModalOpen(false)}
+        onClose={() => setModalOpen(false)}
         onSubmit={generateKey}
-        columns={sshkeyFormColumns}
-        initialValues={{} as GenerateSSHKeyRequest}
-        validate={(values) => {
-          const errors: { [key in keyof GenerateSSHKeyRequest]?: string } = {};
-          if (!values.name) {
-            errors.name = 'Required';
-          }
-          if (!values.type) {
-            errors.type = 'Required';
-          }
-          return errors;
-        }}
+        columns={sshKeyFormColumns}
+        onCompletion={refetch}
       />
     </>
   );

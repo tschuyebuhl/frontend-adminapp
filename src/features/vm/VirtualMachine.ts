@@ -21,7 +21,7 @@ export interface VirtualMachineResponse {
 export interface CreateVirtualMachineRequest {
   name: string;
   network_id: string;
-  ip: string;
+  ip_address: string;
   host: string;
   folder: string;
   dns_servers: string[];
@@ -30,7 +30,7 @@ export interface CreateVirtualMachineRequest {
   domain: string;
   timezone: string;
   template_id: string;
-  prefix: number;
+  prefix_length: number;
   ssh_keys: string[];
 }
 
@@ -53,8 +53,13 @@ export interface Pagination {
   limit: number;
 }
 
+export interface VMResponse {
+  VMs: VirtualMachine[];
+  Count: number;
+}
 
-export async function getVirtualMachines(params: { offset: number; limit: number }): Promise<{ VMs: VirtualMachine[], Count: number }> {
+
+export async function getVirtualMachines(params: { offset: number; limit: number }): Promise<VMResponse> {
   const response = await api.get('/api/v1/virtual-machines', {
     params,
   });

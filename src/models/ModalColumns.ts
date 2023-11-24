@@ -5,7 +5,7 @@ import { VirtualMachine, CreateVirtualMachineRequest } from '../features/vm/Virt
 export interface ColumnDef<T> extends Record<string, any> {
   header: string;
   accessorKey: Extract<keyof T, string>;
-  type: 'text' | 'select' | 'number' | 'date' | 'array';
+  type: 'text' | 'select' | 'number' | 'date' | 'array' | 'vSphereSelect' | 'idSelect';
   accessorFn?: (row: T) => string | number | string[] | number[];
 }
 
@@ -16,9 +16,9 @@ export const vmColumns: ColumnDef<CreateVirtualMachineRequest>[] = [
     type: 'text',
   },
   {
-    header: 'IP',
-    accessorKey: 'ip',
-    type: 'text',
+    header: 'Template',
+    accessorKey: 'template_id',
+    type: 'select',
   },
   {
     header: 'Host',
@@ -31,19 +31,34 @@ export const vmColumns: ColumnDef<CreateVirtualMachineRequest>[] = [
     type: 'select',
   },
   {
+    header: 'SSH Keys',
+    accessorKey: 'ssh_keys',
+    type: 'select',
+  },
+  {
     header: 'Folder',
     accessorKey: 'folder',
     type: 'select',
   },
   {
+    header: 'IP',
+    accessorKey: 'ip_address',
+    type: 'text',
+  },
+  {
+    header: 'Subnet Mask',
+    accessorKey: 'prefix_length',
+    type: 'number',
+  },
+  {
     header: 'DNS Servers',
     accessorKey: 'dns_servers',
-    type: 'text', //fetch out of network
+    type: 'text',
   },
   {
     header: 'Gateway',
     accessorKey: 'gateway',
-    type: 'text', //fetch out of network
+    type: 'text',
   },
   {
     header: 'Domain',
@@ -53,23 +68,13 @@ export const vmColumns: ColumnDef<CreateVirtualMachineRequest>[] = [
   {
     header: 'Timezone',
     accessorKey: 'timezone',
-    type: 'select',
-  },
-  {
-    header: 'Template',
-    accessorKey: 'template_id',
-    type: 'select',
+    type: 'text',
   },
   {
     header: 'Provider',
     accessorKey: 'provider',
-    type: 'select',
+    type: 'text',
   },
-  {
-    header: 'SSH Keys',
-    accessorKey: 'ssh_keys',
-    type: 'select',
-  }
 ];
 
 export const columns: MRT_ColumnDef<VirtualMachine>[] = [

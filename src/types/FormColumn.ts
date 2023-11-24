@@ -2,7 +2,7 @@ export type FormColumn<T> = {
   header: string;
   label?: string;
   accessorKey: keyof T;
-  type?: 'string' | 'number';
+  type?: 'string' | 'number' | 'select' | 'date';
 };
 
 export interface ColumnDef<T> extends Record<string, any> {

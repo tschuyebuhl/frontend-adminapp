@@ -42,8 +42,8 @@ export async function getTemplates(params?: { offset: number; limit: number }): 
     params,
   });
   return {
-    Templates: response.data.Data,
-    Count: response.data.Count,
+    Templates: response.data.data,
+    Count: response.data.total,
   };
 }
 

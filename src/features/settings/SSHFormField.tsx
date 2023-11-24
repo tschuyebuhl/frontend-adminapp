@@ -8,8 +8,8 @@ import {
   SelectChangeEvent,
   FormHelperText,
 } from '@mui/material';
-import { ColumnDef } from '../models/ModalColumns';
-import { GenerateSSHKeyRequest } from '../features/settings/models';
+import { ColumnDef } from '../../models/ModalColumns';
+import { GenerateSSHKeyRequest } from './models';
 
 interface FormFieldProps<T> {
   column: ColumnDef<T>;
@@ -19,7 +19,7 @@ interface FormFieldProps<T> {
   errors?: { [key: string]: string };
 }
 
-export const FormField: React.FC<FormFieldProps<GenerateSSHKeyRequest>> = ({
+export const SSHFormField: React.FC<FormFieldProps<GenerateSSHKeyRequest>> = ({
   column,
   value,
   onChange,

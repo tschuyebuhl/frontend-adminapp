@@ -15,7 +15,7 @@ import { useAuth } from 'react-oidc-context';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <h1>Hello!</h1>,
+    element: <h1>Hello</h1>,
     errorElement: <ErrorPage />,
   },
   {

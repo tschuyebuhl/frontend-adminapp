@@ -41,6 +41,7 @@ export interface Network {
   dhcpStart: string
   dhcpEnd: string
   portGroupId: string
+  domain: string
   dnsServers: string[]
 }
 
@@ -60,6 +61,7 @@ export interface NetworkWebModel {
   DHCPStart: string
   DHCPEnd: string
   PortGroupID: string
+  Domain: string
   DNSServers: string[]
 }
 
@@ -84,8 +86,6 @@ export interface CreateIPAddressRequest {
   description: string
   network: string
 }
-
-
 
 
 //these are UUID's. 

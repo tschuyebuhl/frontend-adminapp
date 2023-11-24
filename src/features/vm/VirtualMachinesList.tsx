@@ -3,40 +3,36 @@ import {
   getVirtualMachines,
   CreateVirtualMachineRequest,
   createVirtualMachine,
+  VMResponse,
 } from './VirtualMachine';
 import { MaterialReactTable } from 'material-react-table';
 import { useNavigate, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { vmColumns, columns } from '../../models/ModalColumns';
 
 import { Box, Button, Typography } from '@mui/material';
 import CreateNewVirtualMachineModal from './CreateNewVirtualMachineModal';
 
 export function VirtualMachinesList() {
-  const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [limit, setLimit] = useState(20);
-  const [offset, setOffset] = useState(0);
   const navigate = useNavigate();
-
-  const virtualMachinesQuery = useQuery({
-    queryKey: ['virtualMachines', { offset, limit }],
-    queryFn: () => getVirtualMachines({ offset, limit }),
-    refetchOnWindowFocus: false,
-  });
-
-  const { data: virtualMachines, refetch } = virtualMachinesQuery;
-
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [virtualMachines, setVirtualMachines] = useState<VMResponse>();
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 5,
+    pageSize: 12,
   });
 
-  useEffect(() => {
-    setOffset(pagination.pageIndex * pagination.pageSize);
-    setLimit(pagination.pageSize);
-    refetch();
-  }, [pagination.pageIndex, pagination.pageSize]);
+  const offset = pagination.pageIndex * pagination.pageSize;
+  const limit = pagination.pageSize;
 
+  useEffect(() => {
+    refetch();
+  }, [offset, limit]);
+
+  const refetch = () => {
+    getVirtualMachines({ offset, limit }).then((fetchedVMs) => {
+      setVirtualMachines(fetchedVMs);
+    });
+  };
   const handleCreateModalClose = () => {
     setCreateModalOpen(false);
   };
@@ -70,8 +66,8 @@ export function VirtualMachinesList() {
         manualPagination
         enableColumnResizing={false}
         enableRowActions={true}
-        onPaginationChange={setPagination}
         state={{ pagination }}
+        onPaginationChange={setPagination}
         rowCount={virtualMachines ? virtualMachines.Count : 0}
         positionActionsColumn="last"
         displayColumnDefOptions={{
@@ -91,13 +87,14 @@ export function VirtualMachinesList() {
           </Button>
         )}
         muiPaginationProps={{
-          rowsPerPageOptions: [5, 10, 25],
+          rowsPerPageOptions: [5, 12, 10, 25],
           showFirstButton: true,
           showLastButton: true,
         }}
         muiTableProps={{
           sx: {
-            //  tableLayout: 'fixed',
+            width: '100%',
+            //tableLayout: 'fixed',
           },
         }}
       />

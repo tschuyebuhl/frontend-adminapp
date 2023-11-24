@@ -122,35 +122,16 @@ export const sshKeyColumns: MRT_ColumnDef<SSHKey>[] = [
   },
 ];
 
-export const sshkeyFormColumns: FormColumn<GenerateSSHKeyRequest>[] = [
-  {
-    header: 'Key Name',
-    label: 'Key Name',
-    accessorKey: 'name',
-    type: 'string',
-  },
-  {
-    header: 'Key Length (bits)',
-    label: 'Key Length (bits)',
-    accessorKey: 'length',
-    type: 'number',
-  },
-  {
-    header: 'Key Type',
-    label: 'Key Type',
-    accessorKey: 'type',
-    type: 'string',
-  },
-]
 
-export const vmColumns: ColumnDef<GenerateSSHKeyRequest>[] = [
+
+export const sshKeyFormColumns: ColumnDef<GenerateSSHKeyRequest>[] = [
   {
     header: 'Name',
     accessorKey: 'name',
     type: 'text',
   },
   {
-    header: 'type',
+    header: 'Type',
     accessorKey: 'type',
     type: 'select',
   },

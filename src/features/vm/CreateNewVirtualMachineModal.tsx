@@ -1,22 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  CircularProgress,
-  DialogTitle,
-  Stack,
-  TextField,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from '@mui/material';
 import { MRT_ColumnDef } from 'material-react-table';
-import { VirtualMachine, CreateVirtualMachineRequest, getVirtualMachines } from './VirtualMachine';
-import { Host, fetchHosts } from '../../models/Host';
-import { Folder, fetchFolders } from '../../models/Folder';
+import { CreateVirtualMachineRequest } from './VirtualMachine';
 import { vmColumns } from '../../models/ModalColumns';
 import { useFolders } from '../../hooks/useFolders';
 import { useHosts } from '../../hooks/useHosts';
@@ -27,6 +12,7 @@ import { IP, Network } from '../ipam/models';
 import { getNextIP, networkDetails } from '../ipam/Network';
 import { AlertSnackbar } from '../../components/AlertSnackbar';
 import { useSSHKeys } from '../../hooks/useSSHKeys';
+import { useTypingEffect } from '../../hooks/useTypingEffect';
 
 type CreateModalProps = {
   open: boolean;
@@ -46,19 +32,23 @@ const CreateNewVirtualMachineModal = ({
   // Initialize values based on columns
   const initialValues: CreateVirtualMachineRequest = {
     name: '',
-    ip: '',
+    ip_address: '',
     host: '',
     network_id: '',
     folder: '',
-    prefix: 0,
+    prefix_length: 0,
     dns_servers: [],
     gateway: '',
     domain: '',
-    timezone: '',
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     template_id: '',
-    provider: '',
+    provider: 'vSphere',
     ssh_keys: [],
   };
+
+  const typeText = useTypingEffect((fieldName: any, value: any) => {
+    setValues((prevValues) => ({ ...prevValues, [fieldName]: value }));
+  }, 30);
 
   const [values, setValues] = useState<CreateVirtualMachineRequest>(initialValues);
   const [errors, setErrors] = useState<{ [key in keyof CreateVirtualMachineRequest]?: string }>({});
@@ -90,15 +80,18 @@ const CreateNewVirtualMachineModal = ({
 
     if (accessorKey === 'network_id') {
       try {
-        const network = await networkDetails(value); // wait for the network details
-        const freeIP = await getNextIP(network.id); // wait for the next IP
-        console.log('dns servers: ', network.dnsServers);
+        const network = await networkDetails(value);
+        const freeIP = await getNextIP(network.id);
+
+        await typeText('ip_address', freeIP.address);
         setValues((prevValues) => ({
           ...prevValues,
-          ip: freeIP.address,
-          dns_servers: network.dnsServers,
-          gateway: network.gateway,
+          prefix_length: network.subnetMask,
+          // network_id: network.id,
         }));
+        await typeText('dns_servers', network.dnsServers.join(', '));
+        await typeText('gateway', network.gateway);
+        await typeText('domain', network.domain);
         success('Fetched IP Address successfully.');
       } catch (fetchError) {
         console.error('An error occurred while fetching network details or IP', fetchError);
@@ -111,13 +104,14 @@ const CreateNewVirtualMachineModal = ({
     event.preventDefault();
     setLoading(true);
     try {
-      await onSubmit(values);
-      onCompletion();
+      //await onSubmit(values);
+      //onCompletion();
+      console.log('values: ', values);
     } catch (error) {
       console.error('There was an issue:', error);
     } finally {
       setLoading(false);
-      onClose();
+      //onClose();
     }
   };
   //when you select a network, it should populate the prefix, dns servers, gateways, and domain
@@ -168,6 +162,14 @@ const CreateNewVirtualMachineModal = ({
           </Stack>
         </form>
       </DialogContent>
+      <DialogActions>
+        <Button color="primary" variant="contained">
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit} color="secondary" variant="contained">
+          Save Changes
+        </Button>
+      </DialogActions>
       <AlertSnackbar
         open={snackbarOpen}
         handleClose={() => setSnackbarOpen(false)}

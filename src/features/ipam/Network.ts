@@ -21,6 +21,7 @@ export async function getNetworks(pagination: Pagination): Promise<{ networks: N
     dhcpStart: network.DHCPStart,
     dhcpEnd: network.DHCPEnd,
     portGroupId: network.PortGroupID,
+    domain: network.Domain,
     dnsServers: network.DNSServers,
   }));
 
@@ -48,6 +49,7 @@ export async function getNetwork({ queryKey }: { queryKey: QueryKey; }): Promise
     dhcpStart: network.DHCPStart,
     dhcpEnd: network.DHCPEnd,
     portGroupId: network.PortGroupID,
+    domain: network.Domain,
     dnsServers: network.DNSServers,
   };
 }
@@ -67,6 +69,7 @@ export async function networkDetails(code: string): Promise<Network> {
     dhcpStart: network.DHCPStart,
     dhcpEnd: network.DHCPEnd,
     portGroupId: network.PortGroupID,
+    domain: network.Domain,
     dnsServers: network.DNSServers,
   };
 }
