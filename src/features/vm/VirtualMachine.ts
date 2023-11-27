@@ -1,5 +1,6 @@
 import { QueryKey } from '@tanstack/react-query';
 import api from '../../util/api';
+import { InfraSize } from '../../models/InfraSize';
 
 export interface VirtualMachine {
   ID: string;
@@ -31,7 +32,8 @@ export interface CreateVirtualMachineRequest {
   timezone: string;
   template_id: string;
   prefix_length: number;
-  ssh_keys: string[];
+  ssh_key: string;
+  size: InfraSize
 }
 
 export interface CloneVirtualMachineRequest {
@@ -59,7 +61,7 @@ export interface VMResponse {
 }
 
 
-export async function getVirtualMachines(params: { offset: number; limit: number }): Promise<VMResponse> {
+export async function getVirtualMachines(params?: { offset: number; limit: number }): Promise<VMResponse> {
   const response = await api.get('/api/v1/virtual-machines', {
     params,
   });

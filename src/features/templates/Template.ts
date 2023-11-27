@@ -2,12 +2,17 @@ import { QueryKey } from '@tanstack/react-query';
 import api from '../../util/api';
 
 
-export interface TemplateResponse {
-  Data: Template[]
-  Count: number
+export interface TemplatesResponse {
+  data: APITemplate[]
+  count: number
 }
 
-export interface Template {
+export interface Templates {
+  data: Template[]
+  count: number
+}
+
+export interface APITemplate {
   ID: string
   Name: string
   Description: string
@@ -20,6 +25,21 @@ export interface Template {
   StorageGB: number
   ExternalID: string
   ExtraInfo: VMWareExtraInfo //could be any of extrainfos, between vmware, azure, aws, gcp
+}
+
+export interface Template {
+  id: string
+  name: string
+  description: string
+  cloudProvider: string
+  version: string
+  osType: string
+  osVersion: string
+  cpuCores: number
+  memoryGB: number
+  storageGB: number
+  externalID: string
+  extraInfo: VMWareExtraInfo //could be any of extrainfos, between vmware, azure, aws, gcp
 }
 
 //vmware
@@ -37,13 +57,28 @@ export interface VMWareExtraInfo {
 }
 
 
-export async function getTemplates(params?: { offset: number; limit: number }): Promise<{ Templates: Template[], Count: number }> {
+export async function getTemplates(params?: { offset: number; limit: number }): Promise<Templates> {
   const response = await api.get('/api/v1/templates', {
     params,
   });
+
+  let templates: Template[] = response.data.data.map((t: APITemplate) => ({
+    id: t.ID,
+    name: t.Name,
+    description: t.Description,
+    cloudProvider: t.CloudProvider,
+    version: t.Version,
+    osType: t.OsType,
+    osVersion: t.OsVersion,
+    cpuCores: t.CPUCores,
+    memoryGB: t.MemoryGB,
+    storageGB: t.StorageGB,
+    externalID: t.ExternalID,
+    extraInfo: t.ExtraInfo,
+  }));
   return {
-    Templates: response.data.data,
-    Count: response.data.total,
+    data: templates,
+    count: response.data.total,
   };
 }
 
@@ -58,7 +93,21 @@ export async function getTemplate({
   if (response.status !== 200) {
     throw new Error(`template with id ${id} fetch not ok`);
   }
-  return response.data;
+  let template: Template = {
+    id: response.data.ID,
+    name: response.data.Name,
+    description: response.data.Description,
+    cloudProvider: response.data.CloudProvider,
+    version: response.data.Version,
+    osType: response.data.OsType,
+    osVersion: response.data.OsVersion,
+    cpuCores: response.data.CPUCores,
+    memoryGB: response.data.MemoryGB,
+    storageGB: response.data.StorageGB,
+    externalID: response.data.ExternalID,
+    extraInfo: response.data.ExtraInfo,
+  };
+  return template;
 }
 
 export async function deleteTemplate(id: string) {

@@ -7,7 +7,7 @@ export const useTemplates = (open: boolean) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = (await getTemplates({ offset: 0, limit: 5 })).Templates;
+      const data = (await getTemplates({ offset: 0, limit: 5 })).data;
 
       setTemplates(data);
     };

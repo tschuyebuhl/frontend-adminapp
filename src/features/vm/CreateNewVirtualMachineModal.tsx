@@ -8,11 +8,11 @@ import { useHosts } from '../../hooks/useHosts';
 import { useTemplates } from '../../hooks/useTemplates';
 import { useNetworks } from '../../hooks/useNetworks';
 import { FormField } from '../../components/FormField';
-import { IP, Network } from '../ipam/models';
 import { getNextIP, networkDetails } from '../ipam/Network';
 import { AlertSnackbar } from '../../components/AlertSnackbar';
 import { useSSHKeys } from '../../hooks/useSSHKeys';
 import { useTypingEffect } from '../../hooks/useTypingEffect';
+import { getSSHKey } from '../settings/models';
 
 type CreateModalProps = {
   open: boolean;
@@ -43,7 +43,8 @@ const CreateNewVirtualMachineModal = ({
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     template_id: '',
     provider: 'vSphere',
-    ssh_keys: [],
+    ssh_key: '',
+    size: { memory_gb: 12, num_cpus: 4, disk_gb: 162, storage_tier: 'thin' },
   };
 
   const typeText = useTypingEffect((fieldName: any, value: any) => {
@@ -78,25 +79,40 @@ const CreateNewVirtualMachineModal = ({
   const handleChange = async (accessorKey: string, value: any) => {
     setValues({ ...values, [accessorKey]: value });
 
-    if (accessorKey === 'network_id') {
-      try {
-        const network = await networkDetails(value);
-        const freeIP = await getNextIP(network.id);
+    switch (accessorKey) {
+      case 'network_id':
+        try {
+          const network = await networkDetails(value);
+          const freeIP = await getNextIP(network.id);
 
-        await typeText('ip_address', freeIP.address);
-        setValues((prevValues) => ({
-          ...prevValues,
-          prefix_length: network.subnetMask,
-          // network_id: network.id,
-        }));
-        await typeText('dns_servers', network.dnsServers.join(', '));
-        await typeText('gateway', network.gateway);
-        await typeText('domain', network.domain);
-        success('Fetched IP Address successfully.');
-      } catch (fetchError) {
-        console.error('An error occurred while fetching network details or IP', fetchError);
-        error('test');
-      }
+          await typeText('ip_address', freeIP.address);
+          setValues((prevValues) => ({
+            ...prevValues,
+            prefix_length: network.subnetMask,
+            dns_servers: network.dnsServers,
+          }));
+          //await typeText('dns_servers', network.dnsServers.join(', '));
+          await typeText('gateway', network.gateway);
+          await typeText('domain', network.domain);
+          success('Fetched IP Address successfully.');
+        } catch (fetchError) {
+          console.error('An error occurred while fetching network details or IP', fetchError);
+          error('test');
+        }
+        break;
+      case 'ssh_key':
+        try {
+          const sshKey = await getSSHKey(value);
+          console.log(sshKey);
+          setValues((prevValues) => ({
+            ...prevValues,
+            //ssh_key: sshKey.publicKey,
+          }));
+          success('Fetched SSH Key successfully.');
+        } catch (fetchError) {
+          console.error('An error occurred while fetching SSH Key', fetchError);
+          error('test');
+        }
     }
   };
 
@@ -104,14 +120,15 @@ const CreateNewVirtualMachineModal = ({
     event.preventDefault();
     setLoading(true);
     try {
-      //await onSubmit(values);
-      //onCompletion();
+      await onSubmit(values);
+      onCompletion();
       console.log('values: ', values);
-    } catch (error) {
-      console.error('There was an issue:', error);
+    } catch (e) {
+      console.error('There was an issue:', e);
+      error('There was an issue creating the VM.');
     } finally {
       setLoading(false);
-      //onClose();
+      onClose();
     }
   };
   //when you select a network, it should populate the prefix, dns servers, gateways, and domain
@@ -127,7 +144,7 @@ const CreateNewVirtualMachineModal = ({
         return networks;
       case 'template_id':
         return templates;
-      case 'ssh_keys':
+      case 'ssh_key':
         return sshKeys;
       default:
         return [];

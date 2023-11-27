@@ -18,7 +18,7 @@ export function VirtualMachinesList() {
   const [virtualMachines, setVirtualMachines] = useState<VMResponse>();
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 12,
+    pageSize: 105,
   });
 
   const offset = pagination.pageIndex * pagination.pageSize;
@@ -87,7 +87,7 @@ export function VirtualMachinesList() {
           </Button>
         )}
         muiPaginationProps={{
-          rowsPerPageOptions: [5, 12, 10, 25],
+          rowsPerPageOptions: [5, 12, 10, 25, 105],
           showFirstButton: true,
           showLastButton: true,
         }}

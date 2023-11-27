@@ -9,10 +9,10 @@ export function TemplateList() {
 
   useEffect(() => {
     async function fetchTemplates() {
-      const data = await getTemplates({ offset: 0, limit: 20 });
+      const templates = await getTemplates({ offset: 0, limit: 20 }).then((res) => res.data);
       setLoading(false);
       setTemplates(
-        data.Templates.map((t) => ({
+        templates.map((t: Template) => ({
           ...t,
           clickCount: 0,
         })),
@@ -44,11 +44,11 @@ export function TemplateList() {
       <List>
         {templates.map((t) => (
           <ListItem
-            key={t.ID}
+            key={t.id}
             disablePadding
             sx={{ display: 'flex', justifyContent: 'space-between' }}
           >
-            <ListItemText primary={t.Name} secondary={`Clicked ${t.OsType} times`} />
+            <ListItemText primary={t.name} secondary={`Clicked ${t.osType} times`} />
             <Box>
               <Button variant="contained">Details</Button>
             </Box>

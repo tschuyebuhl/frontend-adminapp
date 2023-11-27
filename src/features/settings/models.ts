@@ -67,7 +67,7 @@ export async function getSSHKeys(pageParams?: { offset: number; limit: number; }
   return { data: keys, total };
 }
 
-export async function getSSHKey({ queryKey }: { queryKey: QueryKey; }): Promise<SSHKey> {
+export async function getSSHKeyQuery({ queryKey }: { queryKey: QueryKey; }): Promise<SSHKey> {
   const id = queryKey[1];
   const response = await api.get<SSHKeyAPI>(`/api/v1/settings/ssh-keys/${id}`);
   const actualApiData = response.data;
@@ -82,6 +82,21 @@ export async function getSSHKey({ queryKey }: { queryKey: QueryKey; }): Promise<
   };
   return key;
 }
+
+export async function getSSHKey(id: string): Promise<SSHKey> {
+  const response = await api.get(`/api/v1/settings/ssh-keys/${id}`);
+  const actualApiData = response.data.data;
+  let key = {
+    id: actualApiData.ID,
+    name: actualApiData.name,
+    type: actualApiData.type,
+    length: actualApiData.length,
+    fingerprint: actualApiData.fingerprint,
+    publicKey: actualApiData.public_key
+  };
+  return key;
+}
+
 
 export async function generateSSHKey(key: GenerateSSHKeyRequest): Promise<GeneratedSSHKey> {
   const response = await api.post<GenerateSSHKeyResponse>('/api/v1/settings/ssh-keys/generate', key);

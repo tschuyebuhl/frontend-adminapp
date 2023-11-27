@@ -1,5 +1,5 @@
 import React from 'react';
-import { Network } from './Network';
+import { Network } from './models';
 import { Card, CardContent, Typography, Divider, Switch } from '@mui/material';
 
 interface NetworkCardProps {

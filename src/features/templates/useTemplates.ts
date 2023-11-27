@@ -8,7 +8,7 @@ export const useTemplates = (open: boolean) => {
     const fetchData = async () => {
       const fetchedTemplates = await getTemplates();
 
-      setTemplates(fetchedTemplates.Templates);
+      setTemplates(fetchedTemplates.data);
     };
 
     if (open) {

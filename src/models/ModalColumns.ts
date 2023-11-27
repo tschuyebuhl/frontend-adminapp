@@ -32,7 +32,7 @@ export const vmColumns: ColumnDef<CreateVirtualMachineRequest>[] = [
   },
   {
     header: 'SSH Keys',
-    accessorKey: 'ssh_keys',
+    accessorKey: 'ssh_key',
     type: 'select',
   },
   {
@@ -53,7 +53,7 @@ export const vmColumns: ColumnDef<CreateVirtualMachineRequest>[] = [
   {
     header: 'DNS Servers',
     accessorKey: 'dns_servers',
-    type: 'text',
+    type: 'array',
   },
   {
     header: 'Gateway',
@@ -75,6 +75,11 @@ export const vmColumns: ColumnDef<CreateVirtualMachineRequest>[] = [
     accessorKey: 'provider',
     type: 'text',
   },
+  {
+    header: 'Size',
+    accessorKey: 'size',
+    type: 'text',
+  }
 ];
 
 export const columns: MRT_ColumnDef<VirtualMachine>[] = [
