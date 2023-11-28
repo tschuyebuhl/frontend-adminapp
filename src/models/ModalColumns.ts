@@ -5,7 +5,7 @@ import { VirtualMachine, CreateVirtualMachineRequest } from '../features/vm/Virt
 export interface ColumnDef<T> extends Record<string, any> {
   header: string;
   accessorKey: Extract<keyof T, string>;
-  type: 'text' | 'select' | 'number' | 'date' | 'array' | 'vSphereSelect' | 'idSelect';
+  type: 'text' | 'select' | 'number' | 'date' | 'array' | 'vSphereSelect' | 'idSelect' | 'checkbox';
   accessorFn?: (row: T) => string | number | string[] | number[];
 }
 
@@ -79,6 +79,11 @@ export const vmColumns: ColumnDef<CreateVirtualMachineRequest>[] = [
     header: 'Size',
     accessorKey: 'size',
     type: 'text',
+  },
+  {
+    header: 'Power on after creation',
+    accessorKey: 'power_on',
+    type: 'checkbox',
   }
 ];
 

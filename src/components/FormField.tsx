@@ -7,6 +7,9 @@ import {
   TextField,
   SelectChangeEvent,
   FormHelperText,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
 } from '@mui/material';
 import { ColumnDef } from '../models/ModalColumns';
 import { CreateVirtualMachineRequest } from '../features/vm/VirtualMachine';
@@ -47,10 +50,7 @@ export const FormField = <T extends {}>({
             error={Boolean(errors?.[column.accessorKey])}
           >
             {items?.map((item) => (
-              <MenuItem
-                key={item.ID ?? item.id}
-                value={item.VsphereID ?? item.id} // zawiłe. próbuje fetchować po tym property, co jest problematyczne. trzeba by to jakoś ogarnąć
-              >
+              <MenuItem key={item.ID ?? item.id} value={item.ID ?? item.id}>
                 {item.name ?? item.Name}
               </MenuItem>
             ))}
@@ -85,6 +85,22 @@ export const FormField = <T extends {}>({
           helperText={errors?.[column.accessorKey]}
           error={Boolean(errors?.[column.accessorKey])}
         />
+      );
+    case 'checkbox':
+      return (
+        <FormGroup>
+          <FormControlLabel
+            label={column.header}
+            name={column.accessorKey}
+            control={
+              <Checkbox
+                checked={value === true} // Ensure that this is a boolean
+                onChange={(e) => onChange(column.accessorKey, e)}
+                inputProps={{ 'aria-label': 'controlled' }}
+              />
+            }
+          />
+        </FormGroup>
       );
     default:
       return null;

@@ -45,6 +45,7 @@ const CreateNewVirtualMachineModal = ({
     provider: 'vSphere',
     ssh_key: '',
     size: { memory_gb: 12, num_cpus: 4, disk_gb: 162, storage_tier: 'thin' },
+    power_on: true,
   };
 
   const typeText = useTypingEffect((fieldName: any, value: any) => {
@@ -106,13 +107,21 @@ const CreateNewVirtualMachineModal = ({
           console.log(sshKey);
           setValues((prevValues) => ({
             ...prevValues,
-            //ssh_key: sshKey.publicKey,
           }));
           success('Fetched SSH Key successfully.');
         } catch (fetchError) {
           console.error('An error occurred while fetching SSH Key', fetchError);
           error('test');
         }
+        break;
+      case 'power_on':
+        const target = event?.target as HTMLInputElement;
+        const { type, checked } = target;
+        const val = target.value;
+        const newValue = checked;
+        console.log(val);
+        setValues({ ...values, [accessorKey]: newValue });
+        break;
     }
   };
 
@@ -131,8 +140,8 @@ const CreateNewVirtualMachineModal = ({
       onClose();
     }
   };
-  //when you select a network, it should populate the prefix, dns servers, gateways, and domain
-  //when you select a template, it should populate the provider and ssh keys
+  // when you select a network, it should populate the prefix, dns servers, gateways, and domain
+  // when you select a template, it should populate the provider and ssh keys
 
   const getItems = (accessorKey: string) => {
     switch (accessorKey) {

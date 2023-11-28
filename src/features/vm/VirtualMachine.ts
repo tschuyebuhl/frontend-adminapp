@@ -34,6 +34,7 @@ export interface CreateVirtualMachineRequest {
   prefix_length: number;
   ssh_key: string;
   size: InfraSize
+  power_on: boolean;
 }
 
 export interface CloneVirtualMachineRequest {
